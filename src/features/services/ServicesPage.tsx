@@ -19,7 +19,6 @@ import {
 import { FilterPanel } from "@/components/business/FilterPanel";
 import { ProviderGrid } from "@/components/business/ProviderGrid";
 import { EmptyState } from "@/components/common/EmptyState";
-import { LoadingState } from "@/components/common/LoadingState";
 import { providers } from "@/mocks/providers";
 import { categoryBySlug } from "@/mocks/categories";
 import { filterProviders, locationLabel } from "@/core/utils";
@@ -31,11 +30,11 @@ const routeApi = getRouteApi("/services");
 
 export function ServicesPage() {
   const search = routeApi.useSearch();
-  const navigate = useNavigate({ from: "/services" });
+  const navigate = routeApi.useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const patch = (values: Partial<ServicesSearch>) => {
-    navigate({ to: ".", search: (prev) => ({ ...prev, ...values }) });
+    navigate({ to: ".", search: (prev: ServicesSearch) => ({ ...prev, ...values }) });
   };
 
   const results = useMemo(

@@ -108,15 +108,27 @@ export function HomePage() {
       </section>
 
       <Section
-        title="الخدمات الأكثر طلبًا"
-        description="اختر الخدمة التي تحتاجها وابدأ البحث في محافظتك"
+        title="تصفّح الدليل حسب القطاع"
+        description="خدمات فنية، عيادات ورعاية صحية، متاجر محلية، نقل وشحن، وخدمات مهنية"
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {sectors.map((s) => (
+            <SectorCard key={s.slug} sector={s} />
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        title="التصنيفات الأكثر بحثًا"
+        description="اختر التصنيف الذي تحتاجه وابدأ البحث في محافظتك"
       >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {categories.map((c) => (
+          {popularCategories.map((c) => (
             <CategoryCard key={c.id} category={c} />
           ))}
         </div>
       </Section>
+
 
       <Section
         title="مقدمو خدمة موثقون ومميزون"

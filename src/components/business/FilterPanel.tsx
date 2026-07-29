@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/select";
 import { GovernorateSelector, ALL_VALUE } from "./GovernorateSelector";
 import { CityAreaSelector } from "./CityAreaSelector";
-import { categories } from "@/mocks/categories";
+import { categoriesBySector } from "@/mocks/categories";
+import { sectors, sectorBySlug } from "@/mocks/sectors";
 import { RATING_OPTIONS } from "@/core/constants";
 import { formatEGP } from "@/core/utils";
 import type { ServicesSearch } from "@/features/services/searchSchema";
@@ -24,6 +25,9 @@ interface FilterPanelProps {
 }
 
 export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
+  const sectorCategories = categoriesBySector(filters.sector || undefined);
+  const categoryLabel = sectorBySlug(filters.sector)?.searchLabel ?? "التصنيف";
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -34,17 +38,39 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
       </div>
 
       <div className="space-y-2">
-        <Label>نوع الخدمة</Label>
+        <Label>القطاع</Label>
+        <Select
+          value={filters.sector || ALL_VALUE}
+          onValueChange={(v) =>
+            onChange({ sector: v === ALL_VALUE ? "" : v, category: "" })
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="كل القطاعات" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL_VALUE}>كل القطاعات</SelectItem>
+            {sectors.map((s) => (
+              <SelectItem key={s.slug} value={s.slug}>
+                {s.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label>{categoryLabel}</Label>
         <Select
           value={filters.category || ALL_VALUE}
           onValueChange={(v) => onChange({ category: v === ALL_VALUE ? "" : v })}
         >
           <SelectTrigger>
-            <SelectValue placeholder="كل الخدمات" />
+            <SelectValue placeholder="كل التصنيفات" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={ALL_VALUE}>كل الخدمات</SelectItem>
-            {categories.map((c) => (
+          <SelectContent className="max-h-72">
+            <SelectItem value={ALL_VALUE}>كل التصنيفات</SelectItem>
+            {sectorCategories.map((c) => (
               <SelectItem key={c.slug} value={c.slug}>
                 {c.name}
               </SelectItem>
@@ -54,6 +80,7 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
       </div>
 
       <Separator />
+
 
       <div className="space-y-2">
         <Label>المحافظة</Label>

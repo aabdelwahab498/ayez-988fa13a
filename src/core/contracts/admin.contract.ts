@@ -126,7 +126,7 @@ export interface AdminUserDtoContract {
   createdAtUtc: string;
 }
 
-export interface RoleDtoContract {
+export interface AdminRoleDtoContract {
   id: string;
   key: string;
   name: LocalizedText;
@@ -136,7 +136,7 @@ export interface RoleDtoContract {
   isSystem: boolean;
 }
 
-export interface PermissionDtoContract {
+export interface AdminPermissionDtoContract {
   key: string;
   group: string;
   label: LocalizedText;

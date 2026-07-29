@@ -13,6 +13,9 @@ export const servicesSearchSchema = z.object({
   maxPrice: fallback(z.number(), 0).default(0),
   sort: fallback(z.string(), "relevance").default("relevance"),
   q: fallback(z.string(), "").default(""),
+  // URL-driven pagination — the page number is shareable and survives reloads.
+  page: fallback(z.number(), 1).default(1),
+  pageSize: fallback(z.number(), 9).default(9),
 });
 
 export type ServicesSearch = z.infer<typeof servicesSearchSchema>;
@@ -29,6 +32,8 @@ export const defaultSearch: ServicesSearch = {
   maxPrice: 0,
   sort: "relevance",
   q: "",
+  page: 1,
+  pageSize: 9,
 };
 
 export const validateServicesSearch = zodValidator(servicesSearchSchema);

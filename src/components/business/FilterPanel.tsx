@@ -12,8 +12,7 @@ import {
 } from "@/components/ui/select";
 import { GovernorateSelector, ALL_VALUE } from "./GovernorateSelector";
 import { CityAreaSelector } from "./CityAreaSelector";
-import { categoriesBySector } from "@/mocks/categories";
-import { sectors, sectorBySlug } from "@/mocks/sectors";
+import { useCategories, useSectors } from "@/core/hooks/queries";
 import { RATING_OPTIONS } from "@/core/constants";
 import { formatEGP } from "@/core/utils";
 import type { ServicesSearch } from "@/features/services/searchSchema";
@@ -27,8 +26,10 @@ interface FilterPanelProps {
 
 export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
   const { t, td, dir } = useI18n();
-  const sectorCategories = categoriesBySector(filters.sector || undefined);
-  const categoryLabel = td(sectorBySlug(filters.sector)?.searchLabel) || t("dir.category");
+  const { data: sectors = [] } = useSectors();
+  const { data: sectorCategories = [] } = useCategories(filters.sector || undefined);
+  const activeSector = sectors.find((s) => s.slug === filters.sector);
+  const categoryLabel = td(activeSector?.searchLabel) || t("dir.category");
 
   return (
     <div className="space-y-5">

@@ -1,6 +1,6 @@
-// Directory / search results page + filters + cards
-import { useMemo, useState } from "react";
-import { getRouteApi, useNavigate, Link } from "@tanstack/react-router";
+// Directory / search results page — data comes from providerRepository via TanStack Query.
+import { useState } from "react";
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { SlidersHorizontal, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +19,11 @@ import {
 } from "@/components/ui/select";
 import { FilterPanel } from "@/components/business/FilterPanel";
 import { ProviderGrid } from "@/components/business/ProviderGrid";
-import { EmptyState } from "@/components/common/EmptyState";
-import { providers } from "@/mocks/providers";
-import { categoryBySlug } from "@/mocks/categories";
-import { sectors, sectorBySlug } from "@/mocks/sectors";
-import { filterProviders, locationLabel } from "@/core/utils";
+import { QueryBoundary } from "@/components/common/QueryBoundary";
+import { CardGridSkeleton } from "@/components/common/Skeletons";
+import { PaginationControls } from "@/components/common/PaginationControls";
+import { useCategories, useProviderSearch, useSectors } from "@/core/hooks/queries";
+import { locationLabel } from "@/core/utils";
 import { SORT_OPTIONS } from "@/core/constants";
 import { defaultSearch, type ServicesSearch } from "./searchSchema";
 import type { SortKey, SectorSlug } from "@/core/types";
@@ -37,31 +37,40 @@ export function ServicesPage() {
   const navigate = routeApi.useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const patch = (values: Partial<ServicesSearch>) => {
-    navigate({ to: ".", search: (prev: ServicesSearch) => ({ ...prev, ...values }) });
+  /** Filter changes reset paging; page changes keep the rest of the URL state. */
+  const patch = (values: Partial<ServicesSearch>, keepPage = false) => {
+    navigate({
+      to: ".",
+      search: (prev: ServicesSearch) => ({ ...prev, ...values, page: keepPage ? (values.page ?? prev.page) : 1 }),
+    });
   };
 
-  const results = useMemo(
-    () =>
-      filterProviders(providers, {
-        sector: (search.sector || undefined) as SectorSlug | undefined,
-        category: search.category || undefined,
-        governorate: search.governorate || undefined,
-        city: search.city || undefined,
-        minRating: search.rating || undefined,
-        verifiedOnly: search.verified || undefined,
-        availableNow: search.available || undefined,
-        maxPrice: search.maxPrice || undefined,
-        query: search.q || undefined,
-        sort: search.sort as SortKey,
-      }),
-    [search],
-  );
+  const { data: sectors = [] } = useSectors();
+  const { data: allCategories = [] } = useCategories();
 
-  const activeSector = sectorBySlug(search.sector);
+  const query = useProviderSearch({
+    sector: (search.sector || undefined) as SectorSlug | undefined,
+    category: search.category || undefined,
+    governorate: search.governorate || undefined,
+    city: search.city || undefined,
+    minRating: search.rating || undefined,
+    verifiedOnly: search.verified || undefined,
+    availableNow: search.available || undefined,
+    maxPrice: search.maxPrice || undefined,
+    query: search.q || undefined,
+    sort: search.sort as SortKey,
+    page: search.page,
+    pageSize: search.pageSize,
+  });
+
+  const page = query.data;
+  const results = page?.results ?? [];
+  const total = page?.count ?? 0;
+
+  const activeSector = sectors.find((s) => s.slug === search.sector);
+  const activeCategory = allCategories.find((c) => c.slug === search.category);
   const headingSubject =
-    td(categoryBySlug(search.category)?.name) || td(activeSector?.name) || t("dir.allActivities");
-  const categoryName = headingSubject;
+    td(activeCategory?.name) || td(activeSector?.name) || t("dir.allActivities");
   const place = td(
     locationLabel({
       governorate: search.governorate || undefined,
@@ -80,7 +89,7 @@ export function ServicesPage() {
         </h1>
         <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted-foreground">
           <MapPin className="size-4 shrink-0" />
-          {t("dir.results.count", { count: n(results.length) })}
+          {t("dir.results.count", { count: n(total) })}
         </p>
 
         <div className="mt-4 -mx-4 overflow-x-auto px-4 lg:mx-0 lg:px-0">
@@ -106,7 +115,6 @@ export function ServicesPage() {
         </div>
       </header>
 
-
       <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="hidden lg:block">
           <div className="card-surface sticky top-20 p-5">
@@ -131,7 +139,7 @@ export function ServicesPage() {
                   <FilterPanel filters={search} onChange={patch} onClear={clear} />
                 </div>
                 <Button className="mt-6 w-full" variant="brand" onClick={() => setSheetOpen(false)}>
-                  {t("dir.showResults", { count: n(results.length) })}
+                  {t("dir.showResults", { count: n(total) })}
                 </Button>
               </SheetContent>
             </Sheet>
@@ -151,20 +159,39 @@ export function ServicesPage() {
             </Select>
           </div>
 
-          {results.length > 0 ? (
-            <ProviderGrid providers={results} columns={2} />
-          ) : (
-            <EmptyState
-              title={t("dir.emptyTitle")}
-              description={t("dir.emptyDescription", { category: categoryName, place })}
-              actionLabel={t("dir.clearFilters")}
-              onAction={clear}
-            >
-              <Button asChild variant="soft">
-                <Link to="/request-service">{t("dir.sendRequest")}</Link>
-              </Button>
-            </EmptyState>
-          )}
+          <QueryBoundary
+            isLoading={query.isPending}
+            isError={query.isError}
+            isEmpty={results.length === 0}
+            onRetry={() => query.refetch()}
+            skeleton={<CardGridSkeleton count={6} />}
+            emptyTitle={t("dir.emptyTitle")}
+            emptyDescription={t("dir.emptyDescription", { category: headingSubject, place })}
+            emptyAction={
+              <div className="flex flex-wrap justify-center gap-2">
+                <Button variant="outline" onClick={clear}>
+                  {t("dir.clearFilters")}
+                </Button>
+                <Button asChild variant="soft">
+                  <Link to="/request-service">{t("dir.sendRequest")}</Link>
+                </Button>
+              </div>
+            }
+          >
+            <div className={query.isFetching ? "opacity-60 transition-opacity" : undefined}>
+              <ProviderGrid providers={results} columns={2} />
+            </div>
+            {page && (
+              <PaginationControls
+                page={page.page}
+                totalPages={page.totalPages}
+                count={page.count}
+                pageSize={page.pageSize}
+                isFetching={query.isFetching}
+                onPageChange={(p) => patch({ page: p }, true)}
+              />
+            )}
+          </QueryBoundary>
         </div>
       </div>
     </div>

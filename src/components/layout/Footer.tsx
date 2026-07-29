@@ -2,11 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { Phone, Mail, Smartphone } from "lucide-react";
 import { BrandLogo } from "@/components/common/BrandLogo";
 import { useI18n } from "@/features/i18n/I18nProvider";
-import { categories } from "@/mocks/categories";
+import { useCategories } from "@/core/hooks/queries";
 import { defaultSearch } from "@/features/services/searchSchema";
 
 export function Footer() {
   const { t, td } = useI18n();
+  const { data: categories = [] } = useCategories();
   return (
     <footer className="mt-16 border-t border-border bg-brand text-brand-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-4 lg:px-8">

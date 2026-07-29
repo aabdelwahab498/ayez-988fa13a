@@ -1,10 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { ServicesPage } from "@/features/services/ServicesPage";
-import { validateServicesSearch } from "@/features/services/searchSchema";
+import { defaultSearch, validateServicesSearch } from "@/features/services/searchSchema";
 
 export const Route = createFileRoute("/services")({
   validateSearch: validateServicesSearch,
+  // Keep shared URLs clean: default filter/paging values never hit the address bar.
+  search: { middlewares: [stripSearchParams(defaultSearch)] },
   head: () => ({
     meta: [
       { title: "دليل الخدمات والعيادات والمتاجر في مصر | بحث بالموقع" },

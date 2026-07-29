@@ -16,8 +16,7 @@ import {
 import { RequestStepper } from "@/components/common/RequestStepper";
 import { EgyptLocationSelector } from "@/components/business/EgyptLocationSelector";
 import { REQUEST_STEPS } from "@/core/constants";
-import { categories, categoryBySlug } from "@/mocks/categories";
-import { providerById } from "@/mocks/providers";
+import { useCategories, useCreateRequest, useProvider } from "@/core/hooks/queries";
 import { locationLabel } from "@/core/utils";
 import type { EgyptLocation } from "@/core/types";
 import { defaultSearch } from "@/features/services/searchSchema";
@@ -28,7 +27,9 @@ const routeApi = getRouteApi("/request-service");
 export function RequestServicePage() {
   const { t, td } = useI18n();
   const { provider: providerId, category: presetCategory } = routeApi.useSearch();
-  const provider = providerById(providerId);
+  const { data: provider } = useProvider(providerId || undefined);
+  const { data: categories = [] } = useCategories();
+  const createRequest = useCreateRequest();
 
   const stepLabels = [
     t("req.step.service"),
@@ -62,9 +63,30 @@ export function RequestServicePage() {
     setStep((s) => Math.min(s + 1, REQUEST_STEPS.length - 1));
   };
 
+  const [reference, setReference] = useState("");
+
   const submit = () => {
-    setSubmitted(true);
-    toast.success(t("req.toast.success"));
+    createRequest.mutate(
+      {
+        categorySlug: category,
+        governorate: location.governorate,
+        city: location.city,
+        area: location.area,
+        description,
+        preferredTime,
+        customerName: name,
+        customerPhone: phone,
+        providerId: providerId || undefined,
+      },
+      {
+        onSuccess: (res) => {
+          setReference(res.reference);
+          setSubmitted(true);
+          toast.success(t("req.toast.success"));
+        },
+        onError: () => toast.error(t("req.toast.incomplete")),
+      },
+    );
   };
 
   if (submitted) {
@@ -75,7 +97,7 @@ export function RequestServicePage() {
         </span>
         <h1 className="mt-5 text-2xl font-extrabold text-foreground">{t("req.success.title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {t("req.success.body", { ref: "REQ-10312", phone })}
+          {t("req.success.body", { ref: reference, phone })}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Button asChild variant="brand">
@@ -190,7 +212,7 @@ export function RequestServicePage() {
         {step === 4 && (
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
             {[
-              [t("req.summary.service"), td(categoryBySlug(category)?.name) || "-"],
+              [t("req.summary.service"), td(categories.find((c) => c.slug === category)?.name) || "-"],
               [t("req.summary.location"), locationLabel(location)],
               [
                 t("req.summary.time"),
@@ -227,7 +249,7 @@ export function RequestServicePage() {
               <ArrowLeft className="size-4" />
             </Button>
           ) : (
-            <Button variant="accent" onClick={submit}>
+            <Button variant="accent" onClick={submit} disabled={createRequest.isPending}>
               {t("req.nav.submit")}
             </Button>
           )}

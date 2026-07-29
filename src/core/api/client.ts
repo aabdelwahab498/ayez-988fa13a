@@ -1,10 +1,3 @@
-/**
- * Placeholder API layer.
- * Each function currently resolves mock data. When the Django REST API is
- * ready, swap the body for a fetch against API_BASE_URL — signatures stay.
- */
-export const API_BASE_URL = "/api/v1";
-
-export async function mockRequest<T>(data: T, ms = 300): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(data), ms));
-}
+/** Kept for backwards compatibility — the transport lives in `http.ts`. */
+export { API_BASE_URL, ENDPOINTS, ApiError, mockRequest, paginate, toQueryString, DEFAULT_PAGE_SIZE } from "./http";
+export type { Paginated, PageQuery } from "./http";

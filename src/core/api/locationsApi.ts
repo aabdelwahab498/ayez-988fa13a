@@ -1,17 +1,22 @@
-import { mockRequest } from "./client";
+/** Placeholder API service — `/api/v1/locations/`. */
+import { ENDPOINTS, mockRequest } from "./http";
 import { governorates } from "@/mocks/locations";
-import type { Governorate } from "@/core/types";
+import { mapGovernorate } from "./mappers";
+import type { Area, City, Governorate } from "@/core/types";
 
 export const locationsApi = {
   /** GET /api/v1/locations/governorates/ */
-  listGovernorates: (): Promise<Governorate[]> => mockRequest(governorates),
+  governorates: (): Promise<Governorate[]> => {
+    void ENDPOINTS.locations.governorates;
+    return mockRequest(governorates.map(mapGovernorate));
+  },
 
   /** GET /api/v1/locations/governorates/{slug}/cities/ */
-  listCities: (governorateSlug: string) =>
+  cities: (governorateSlug: string): Promise<City[]> =>
     mockRequest(governorates.find((g) => g.slug === governorateSlug)?.cities ?? []),
 
-  /** GET /api/v1/locations/cities/{slug}/areas/ */
-  listAreas: (governorateSlug: string, citySlug: string) =>
+  /** GET /api/v1/locations/governorates/{gov}/cities/{city}/areas/ */
+  areas: (governorateSlug: string, citySlug: string): Promise<Area[]> =>
     mockRequest(
       governorates
         .find((g) => g.slug === governorateSlug)

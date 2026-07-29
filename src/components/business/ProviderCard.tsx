@@ -6,11 +6,12 @@ import { RatingWidget } from "@/components/common/RatingWidget";
 import { VerifiedBadge } from "@/components/common/VerifiedBadge";
 import { ServiceCoverageBadge } from "@/components/common/ServiceCoverageBadge";
 import { formatPriceRange, formatResponseTime } from "@/core/utils";
-import { categories } from "@/mocks/categories";
+import { useCategories } from "@/core/hooks/queries";
 import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function ProviderCard({ provider }: { provider: Provider }) {
   const { t, td, n } = useI18n();
+  const { data: categories = [] } = useCategories();
   const mainCoverage = provider.canServeNationwide
     ? { scope: "nationwide" as const, label: t("dir.nationwideCoverage") }
     : provider.coverage[0];

@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { User, UserRole } from "@/core/types";
-import { mockUsers } from "@/mocks/requests";
+import { customerRepository } from "@/core/repositories";
 
 /** UI-only mock auth store. No real authentication logic. */
 let currentUser: User | null = null;
@@ -11,11 +11,13 @@ function emit() {
 }
 
 export const mockAuth = {
-  signInAs(role: Exclude<UserRole, "guest">) {
-    currentUser = mockUsers[role];
+  /** Session identity comes from the repository layer, never from mocks. */
+  async signInAs(role: Exclude<UserRole, "guest">) {
+    currentUser = await customerRepository.signInAs(role);
     emit();
   },
-  signOut() {
+  async signOut() {
+    await customerRepository.signOut();
     currentUser = null;
     emit();
   },

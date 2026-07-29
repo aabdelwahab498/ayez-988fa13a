@@ -16,9 +16,9 @@ import { SearchBarWidget } from "@/components/business/SearchBarWidget";
 import { CategoryCard } from "@/components/business/CategoryCard";
 import { SectorCard } from "@/components/business/SectorCard";
 import { ProviderGrid } from "@/components/business/ProviderGrid";
-import { categories } from "@/mocks/categories";
-import { sectors } from "@/mocks/sectors";
-import { providers } from "@/mocks/providers";
+import { QueryBoundary } from "@/components/common/QueryBoundary";
+import { CardGridSkeleton } from "@/components/common/Skeletons";
+import { useCategories, useFeaturedProviders, useSectors } from "@/core/hooks/queries";
 import { useI18n } from "@/features/i18n/I18nProvider";
 import { defaultSearch } from "@/features/services/searchSchema";
 
@@ -38,10 +38,15 @@ const trust = [
 export function HomePage() {
   const { t, lang } = useI18n();
   const locale = lang === "ar" ? "ar-EG" : "en-US";
-  const featured = providers.filter((p) => p.verified && p.rating >= 4.6).slice(0, 6);
+  const { data: sectors = [] } = useSectors();
+  const { data: categories = [] } = useCategories();
+  const featuredQuery = useFeaturedProviders(6);
+  const featured = featuredQuery.data ?? [];
   const popularCategories = [...categories]
     .sort((a, b) => b.providersCount - a.providersCount)
     .slice(0, 12);
+  const countBySector = (slug: string) =>
+    categories.filter((c) => c.sector === slug).length;
 
 
   return (
@@ -104,7 +109,7 @@ export function HomePage() {
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sectors.map((s) => (
-            <SectorCard key={s.slug} sector={s} />
+            <SectorCard key={s.slug} sector={s} categoryCount={countBySector(s.slug)} />
           ))}
         </div>
       </Section>
@@ -133,7 +138,15 @@ export function HomePage() {
           </Button>
         }
       >
-        <ProviderGrid providers={featured} />
+        <QueryBoundary
+          isLoading={featuredQuery.isPending}
+          isError={featuredQuery.isError}
+          isEmpty={featured.length === 0}
+          onRetry={() => featuredQuery.refetch()}
+          skeleton={<CardGridSkeleton count={6} />}
+        >
+          <ProviderGrid providers={featured} />
+        </QueryBoundary>
       </Section>
 
       <section className="bg-card py-12 lg:py-16">

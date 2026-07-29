@@ -24,10 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { sectors } from "@/mocks/sectors";
-import { categories } from "@/mocks/categories";
-import { governorates } from "@/mocks/locations";
-import { subscriptionPlans } from "@/mocks/marketplace";
+import { useCategories, useGovernorates, usePlans, useSectors } from "@/core/hooks/queries";
 import { formatEGP } from "@/core/utils";
 import { useI18n } from "@/features/i18n/I18nProvider";
 import { marketplaceRepository } from "@/core/repositories/marketplaceRepository";
@@ -84,6 +81,10 @@ export function JoinProviderPage({ initialPlan }: { initialPlan: PlanTier }) {
   });
 
   const values = form.watch();
+  const { data: sectors = [] } = useSectors();
+  const { data: categories = [] } = useCategories();
+  const { data: governorates = [] } = useGovernorates();
+  const { data: subscriptionPlans = [] } = usePlans();
   const sectorCategories = categories.filter((c) => c.sector === values.sector);
   const cities = governorates.find((g) => g.slug === values.governorate)?.cities ?? [];
 

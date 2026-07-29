@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Phone, MapPin, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { EmptyState } from "@/components/common/EmptyState";
-import { customerRequests } from "@/mocks/requests";
+import { QueryBoundary } from "@/components/common/QueryBoundary";
+import { ListSkeleton } from "@/components/common/Skeletons";
+import { PaginationControls } from "@/components/common/PaginationControls";
+import { useMyRequests } from "@/core/hooks/queries";
 import type { RequestStatus, ServiceRequest } from "@/core/types";
 import { defaultSearch } from "@/features/services/searchSchema";
 import { useI18n } from "@/features/i18n/I18nProvider";
@@ -64,6 +68,11 @@ function RequestCard({ request }: { request: ServiceRequest }) {
 
 export function MyRequestsPage() {
   const { t } = useI18n();
+  const [tab, setTab] = useState<"all" | RequestStatus>("all");
+  const [page, setPage] = useState(1);
+  const query = useMyRequests(page, tab === "all" ? undefined : tab);
+  const result = query.data;
+  const list = result?.results ?? [];
 
   const tabs: { key: "all" | RequestStatus; label: string }[] = [
     { key: "all", label: t("req.tabs.all") },
@@ -87,36 +96,58 @@ export function MyRequestsPage() {
         </Button>
       </header>
 
-      <Tabs defaultValue="all" className="mt-6">
+      <Tabs
+        value={tab}
+        onValueChange={(v) => {
+          setTab(v as "all" | RequestStatus);
+          setPage(1);
+        }}
+        className="mt-6"
+      >
         <TabsList className="flex w-full flex-wrap justify-start gap-1">
-          {tabs.map((tab) => (
-            <TabsTrigger key={tab.key} value={tab.key}>
-              {tab.label}
+          {tabs.map((item) => (
+            <TabsTrigger key={item.key} value={item.key}>
+              {item.label}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {tabs.map((tab) => {
-          const list =
-            tab.key === "all"
-              ? customerRequests
-              : customerRequests.filter((r) => r.status === tab.key);
-          return (
-            <TabsContent key={tab.key} value={tab.key} className="mt-5 space-y-3">
-              {list.length ? (
-                list.map((r) => <RequestCard key={r.id} request={r} />)
-              ) : (
-                <EmptyState title={t("req.empty.title")} description={t("req.empty.description")}>
-                  <Button asChild variant="soft">
-                    <Link to="/services" search={defaultSearch}>
-                      {t("req.empty.browse")}
-                    </Link>
-                  </Button>
-                </EmptyState>
+        {tabs.map((item) => (
+          <TabsContent key={item.key} value={item.key} className="mt-5 space-y-3">
+            <QueryBoundary
+              isLoading={query.isPending}
+              isError={query.isError}
+              isEmpty={list.length === 0}
+              onRetry={() => query.refetch()}
+              skeleton={<ListSkeleton count={3} />}
+              emptyTitle={t("req.empty.title")}
+              emptyDescription={t("req.empty.description")}
+              emptyAction={
+                <Button asChild variant="soft">
+                  <Link to="/services" search={defaultSearch}>
+                    {t("req.empty.browse")}
+                  </Link>
+                </Button>
+              }
+            >
+              <div className={query.isFetching ? "space-y-3 opacity-60" : "space-y-3"}>
+                {list.map((r) => (
+                  <RequestCard key={r.id} request={r} />
+                ))}
+              </div>
+              {result && (
+                <PaginationControls
+                  page={result.page}
+                  totalPages={result.totalPages}
+                  count={result.count}
+                  pageSize={result.pageSize}
+                  isFetching={query.isFetching}
+                  onPageChange={setPage}
+                />
               )}
-            </TabsContent>
-          );
-        })}
+            </QueryBoundary>
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

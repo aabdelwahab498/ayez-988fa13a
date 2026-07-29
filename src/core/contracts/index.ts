@@ -25,3 +25,4 @@ export * from "./ads.contract";
 export * from "./notifications.contract";
 export * from "./analytics.contract";
 export * from "./ai.contract";
+export * from "./admin.contract";

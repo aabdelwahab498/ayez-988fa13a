@@ -18,3 +18,4 @@ export * from "./campaignRepository";
 export * from "./customerRepository";
 export * from "./dashboardRepository";
 export * from "./marketplaceRepository";
+export * from "./adminRepository";

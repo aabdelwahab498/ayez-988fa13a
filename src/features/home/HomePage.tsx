@@ -73,15 +73,17 @@ export function HomePage() {
           <div className="min-w-0">
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-foreground/20 bg-card/10 px-3 py-1 text-xs font-semibold">
               <ShieldCheck className="size-3.5" />
-              منصة الخدمات الأولى في مصر
+              الدليل الرقمي الأشمل في مصر
             </span>
             <h1 className="mt-5 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
               {APP_TAGLINE}
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-brand-foreground/80 sm:text-base">
-              ابحث عن فنيين وشركات خدمات موثقة في جميع محافظات مصر، قارن التقييمات
-              والأسعار ومناطق التغطية، وأرسل طلبك في خطوات بسيطة.
+              دليل واحد يجمع مقدمي الخدمات والعيادات والمتاجر وشركات النقل والخدمات
+              المهنية في جميع محافظات مصر. ابحث بالتصنيف أو التخصص أو الموقع، وقارن
+              التقييمات والأسعار قبل ما تتواصل.
             </p>
+
             <div className="mt-6 flex flex-wrap gap-6 text-sm text-brand-foreground/80">
               <div>
                 <p className="text-2xl font-extrabold text-brand-foreground">+٩٦٦</p>

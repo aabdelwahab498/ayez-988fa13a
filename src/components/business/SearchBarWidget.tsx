@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/select";
 import { GovernorateSelector, ALL_VALUE } from "./GovernorateSelector";
 import { governorates } from "@/mocks/locations";
-import { categories } from "@/mocks/categories";
+import { categoriesBySector } from "@/mocks/categories";
+import { sectors, sectorBySlug } from "@/mocks/sectors";
+import { defaultSearch } from "@/features/services/searchSchema";
 
 interface SearchBarWidgetProps {
+  defaultSector?: string;
   defaultCategory?: string;
   defaultGovernorate?: string;
   defaultCity?: string;
@@ -22,32 +25,31 @@ interface SearchBarWidgetProps {
 }
 
 export function SearchBarWidget({
+  defaultSector,
   defaultCategory,
   defaultGovernorate,
   defaultCity,
   variant = "hero",
 }: SearchBarWidgetProps) {
   const navigate = useNavigate();
+  const [sector, setSector] = useState<string | undefined>(defaultSector);
   const [category, setCategory] = useState<string | undefined>(defaultCategory);
   const [governorate, setGovernorate] = useState<string | undefined>(defaultGovernorate);
   const [city, setCity] = useState<string | undefined>(defaultCity);
 
   const cities = governorates.find((g) => g.slug === governorate)?.cities ?? [];
+  const sectorCategories = categoriesBySector(sector);
+  const categoryLabel = sectorBySlug(sector)?.searchLabel ?? "ما الذي تبحث عنه؟";
 
   const submit = () => {
     navigate({
       to: "/services",
       search: {
+        ...defaultSearch,
+        sector: sector ?? "",
         category: category ?? "",
         governorate: governorate ?? "",
         city: city ?? "",
-        area: "",
-        rating: 0,
-        verified: false,
-        available: false,
-        maxPrice: 0,
-        sort: "relevance",
-        q: "",
       },
     });
   };
@@ -60,17 +62,37 @@ export function SearchBarWidget({
           : "card-surface p-4"
       }
     >
-      <div className="grid gap-3 lg:grid-cols-[1.2fr_1fr_1fr_auto]">
+      <div className="grid gap-3 lg:grid-cols-[1fr_1.2fr_1fr_1fr_auto]">
+        <Select
+          value={sector ?? ALL_VALUE}
+          onValueChange={(v) => {
+            setSector(v === ALL_VALUE ? undefined : v);
+            setCategory(undefined);
+          }}
+        >
+          <SelectTrigger className="h-12" aria-label="القطاع">
+            <SelectValue placeholder="كل القطاعات" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL_VALUE}>كل القطاعات</SelectItem>
+            {sectors.map((s) => (
+              <SelectItem key={s.slug} value={s.slug}>
+                {s.shortName} — {s.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Select
           value={category ?? ALL_VALUE}
           onValueChange={(v) => setCategory(v === ALL_VALUE ? undefined : v)}
         >
-          <SelectTrigger className="h-12" aria-label="نوع الخدمة">
-            <SelectValue placeholder="ما هي الخدمة التي تحتاجها؟" />
+          <SelectTrigger className="h-12" aria-label={categoryLabel}>
+            <SelectValue placeholder={categoryLabel} />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={ALL_VALUE}>كل الخدمات</SelectItem>
-            {categories.map((c) => (
+          <SelectContent className="max-h-72">
+            <SelectItem value={ALL_VALUE}>كل التصنيفات</SelectItem>
+            {sectorCategories.map((c) => (
               <SelectItem key={c.slug} value={c.slug}>
                 {c.name}
               </SelectItem>

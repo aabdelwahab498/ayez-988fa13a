@@ -3,6 +3,7 @@ import { nsProvider } from "./ns/provider";
 import { nsRequests } from "./ns/requests";
 import { nsDashboard } from "./ns/dashboard";
 import { nsMarketplace } from "./ns/marketplace";
+import { nsAdmin } from "./ns/admin";
 
 export type Language = "ar" | "en";
 
@@ -176,6 +177,7 @@ export const translations = {
     ...nsRequests.ar,
     ...nsDashboard.ar,
     ...nsMarketplace.ar,
+    ...nsAdmin.ar,
   },
   en: {
     ...base.en,
@@ -184,6 +186,7 @@ export const translations = {
     ...nsRequests.en,
     ...nsDashboard.en,
     ...nsMarketplace.en,
+    ...nsAdmin.en,
   },
 };
 

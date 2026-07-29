@@ -1,4 +1,7 @@
 import type { Provider, Review, ServiceCoverage } from "@/core/types";
+import { categoryBySlug } from "@/mocks/categories";
+import { directoryListings } from "@/mocks/directoryListings";
+
 
 const img = (seed: string, w = 600, h = 400) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`;

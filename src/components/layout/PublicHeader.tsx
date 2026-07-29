@@ -19,6 +19,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { APP_NAME, PUBLIC_NAV } from "@/core/constants";
+import { useI18n } from "@/features/i18n/I18nProvider";
+import { LanguageToggle, ThemeToggle } from "./AppearanceControls";
 import { useMockAuth } from "@/features/auth/useMockAuth";
 
 function BrandMark() {
@@ -32,6 +34,7 @@ function BrandMark() {
 export function PublicHeader() {
   const [open, setOpen] = useState(false);
   const { user, role, signInAs, signOut } = useMockAuth();
+  const { t } = useI18n();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
@@ -48,19 +51,21 @@ export function PublicHeader() {
                 inactiveProps={{ className: "text-muted-foreground" }}
                 className="text-sm transition-colors hover:text-brand"
               >
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             ))}
             <Link
               to="/provider-dashboard"
               className="text-sm text-muted-foreground transition-colors hover:text-brand"
             >
-              انضم كمقدم خدمة
+              {t("nav.joinProvider")}
             </Link>
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <LanguageToggle />
+          <ThemeToggle />
           <div className="hidden lg:block">
             {user ? (
               <DropdownMenu>
@@ -71,16 +76,16 @@ export function PublicHeader() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuLabel>حسابي التجريبي</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t("auth.demoAccount")}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/my-requests">طلباتي</Link>
+                    <Link to="/my-requests">{t("nav.myRequests")}</Link>
                   </DropdownMenuItem>
                   {(role === "provider" || role === "admin") && (
                     <DropdownMenuItem asChild>
                       <Link to="/provider-dashboard">
                         <LayoutDashboard className="size-4" />
-                        لوحة مقدم الخدمة
+                        {t("nav.providerDashboard")}
                       </Link>
                     </DropdownMenuItem>
                   )}
@@ -88,14 +93,14 @@ export function PublicHeader() {
                     <DropdownMenuItem asChild>
                       <Link to="/admin">
                         <ShieldCheck className="size-4" />
-                        لوحة الإدارة
+                        {t("nav.adminDashboard")}
                       </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={signOut}>
                     <LogOut className="size-4" />
-                    تسجيل الخروج
+                    {t("auth.signOut")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -103,29 +108,29 @@ export function PublicHeader() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
-                    تسجيل الدخول
+                    {t("auth.signIn")}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuLabel>الدخول كـ (وضع تجريبي)</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t("auth.signInAs")}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => signInAs("customer")}>عميل</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signInAs("customer")}>{t("auth.customer")}</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => signInAs("provider")}>
-                    مقدم خدمة
+                    {t("auth.provider")}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => signInAs("admin")}>مسؤول</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signInAs("admin")}>{t("auth.admin")}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
           </div>
 
           <Button asChild variant="accent" size="sm" className="hidden sm:inline-flex">
-            <Link to="/request-service">اطلب خدمة</Link>
+            <Link to="/request-service">{t("nav.request")}</Link>
           </Button>
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="القائمة">
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label={t("nav.menu")}>
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
@@ -134,7 +139,7 @@ export function PublicHeader() {
                 <SheetTitle className="text-right">{APP_NAME}</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-1">
-                {[...PUBLIC_NAV, { to: "/provider-dashboard", label: "لوحة مقدم الخدمة" }, { to: "/admin", label: "لوحة الإدارة" }].map(
+                {[...PUBLIC_NAV, { to: "/provider-dashboard", labelKey: "nav.providerDashboard" as const }, { to: "/admin", labelKey: "nav.adminDashboard" as const }].map(
                   (item) => (
                     <Link
                       key={item.to}
@@ -142,7 +147,7 @@ export function PublicHeader() {
                       onClick={() => setOpen(false)}
                       className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                     </Link>
                   ),
                 )}
@@ -150,23 +155,23 @@ export function PublicHeader() {
               <div className="mt-6 space-y-2 border-t border-border pt-4">
                 {user ? (
                   <>
-                    <p className="text-sm text-muted-foreground">مسجل الدخول: {user.name}</p>
+                    <p className="text-sm text-muted-foreground">{t("auth.signedInAs")} {user.name}</p>
                     <Button variant="outline" className="w-full" onClick={signOut}>
-                      تسجيل الخروج
+                      {t("auth.signOut")}
                     </Button>
                   </>
                 ) : (
                   <>
-                    <p className="text-sm text-muted-foreground">الدخول التجريبي</p>
+                    <p className="text-sm text-muted-foreground">{t("auth.demoLogin")}</p>
                     <div className="grid grid-cols-3 gap-2">
                       <Button variant="secondary" size="sm" onClick={() => signInAs("customer")}>
-                        عميل
+                        {t("auth.customer")}
                       </Button>
                       <Button variant="secondary" size="sm" onClick={() => signInAs("provider")}>
-                        مقدم
+                        {t("auth.providerShort")}
                       </Button>
                       <Button variant="secondary" size="sm" onClick={() => signInAs("admin")}>
-                        مسؤول
+                        {t("auth.admin")}
                       </Button>
                     </div>
                   </>

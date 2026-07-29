@@ -35,7 +35,7 @@ export const REQUEST_STEPS = [
 
 export const PUBLIC_NAV = [
   { to: "/", label: "الرئيسية" },
-  { to: "/services", label: "الخدمات" },
+  { to: "/services", label: "الدليل" },
   { to: "/request-service", label: "اطلب خدمة" },
   { to: "/my-requests", label: "طلباتي" },
 ];

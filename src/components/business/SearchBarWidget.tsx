@@ -11,9 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GovernorateSelector, ALL_VALUE } from "./GovernorateSelector";
-import { governorates } from "@/mocks/locations";
-import { categoriesBySector, categoryBySlug } from "@/mocks/categories";
-import { sectors, sectorBySlug } from "@/mocks/sectors";
+import { useCategories, useCities, useSectors } from "@/core/hooks/queries";
 import { defaultSearch } from "@/features/services/searchSchema";
 import { useI18n } from "@/features/i18n/I18nProvider";
 
@@ -39,9 +37,11 @@ export function SearchBarWidget({
   const [governorate, setGovernorate] = useState<string | undefined>(defaultGovernorate);
   const [city, setCity] = useState<string | undefined>(defaultCity);
 
-  const cities = governorates.find((g) => g.slug === governorate)?.cities ?? [];
-  const sectorCategories = categoriesBySector(sector);
-  const categoryLabel = td(sectorBySlug(sector)?.searchLabel) || t("dir.whatAreYouLookingFor");
+  const { data: sectors = [] } = useSectors();
+  const { data: sectorCategories = [] } = useCategories(sector);
+  const { data: cities = [] } = useCities(governorate);
+  const activeSector = sectors.find((s) => s.slug === sector);
+  const categoryLabel = td(activeSector?.searchLabel) || t("dir.whatAreYouLookingFor");
 
   const submit = () => {
     navigate({
@@ -74,7 +74,7 @@ export function SearchBarWidget({
         >
           <SelectTrigger className="h-12" aria-label={t("dir.sector")}>
             <SelectValue>
-              {sector ? td(sectorBySlug(sector)?.name) : t("dir.allSectors")}
+              {sector ? td(activeSector?.name) : t("dir.allSectors")}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -93,7 +93,9 @@ export function SearchBarWidget({
         >
           <SelectTrigger className="h-12" aria-label={categoryLabel}>
             <SelectValue>
-              {category ? td(categoryBySlug(category)?.name) : categoryLabel}
+              {category
+                ? td(sectorCategories.find((c) => c.slug === category)?.name)
+                : categoryLabel}
             </SelectValue>
           </SelectTrigger>
           <SelectContent className="max-h-72">

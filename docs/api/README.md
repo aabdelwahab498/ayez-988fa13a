@@ -16,3 +16,9 @@ zero runtime impact). If a document and the TypeScript disagree, the TypeScript 
 
 Stack the contracts target: ASP.NET Core Web API · Clean Architecture · PostgreSQL ·
 Redis · Python AI services · React web · Flutter mobile.
+
+---
+
+**Volume 2.12** extends this package with multi-platform readiness (backend module
+ownership, Python AI integration points, Flutter screen mapping, mobile capabilities):
+see [`../ecosystem/README.md`](../ecosystem/README.md).

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, ShieldCheck, LayoutDashboard, LogOut, UserRound, Wrench } from "lucide-react";
+import { Menu, ShieldCheck, LayoutDashboard, LogOut, UserRound } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -22,11 +23,8 @@ import { useMockAuth } from "@/features/auth/useMockAuth";
 
 function BrandMark() {
   return (
-    <Link to="/" className="flex shrink-0 items-center gap-2">
-      <span className="grid size-9 place-items-center rounded-xl bg-brand text-brand-foreground">
-        <Wrench className="size-5" />
-      </span>
-      <span className="text-lg font-extrabold text-foreground">{APP_NAME}</span>
+    <Link to="/" className="flex shrink-0 items-center" aria-label={APP_NAME}>
+      <BrandLogo />
     </Link>
   );
 }

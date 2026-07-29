@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Wrench, Phone, Mail, Smartphone } from "lucide-react";
+import { Phone, Mail, Smartphone } from "lucide-react";
+import { BrandLogo } from "@/components/common/BrandLogo";
 import { APP_NAME } from "@/core/constants";
 import { categories } from "@/mocks/categories";
 import { defaultSearch } from "@/features/services/searchSchema";
@@ -9,12 +10,7 @@ export function Footer() {
     <footer className="mt-16 border-t border-border bg-brand text-brand-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-4 lg:px-8">
         <div className="md:col-span-1">
-          <div className="flex items-center gap-2">
-            <span className="grid size-9 place-items-center rounded-xl bg-accent-orange text-accent-orange-foreground">
-              <Wrench className="size-5" />
-            </span>
-            <span className="text-lg font-extrabold">{APP_NAME}</span>
-          </div>
+          <BrandLogo tone="invert" />
           <p className="mt-4 text-sm text-brand-foreground/70">
             منصة مصرية تربط العملاء بمقدمي خدمات موثقين في جميع محافظات الجمهورية.
           </p>

@@ -61,6 +61,10 @@ const trust = [
 
 export function HomePage() {
   const featured = providers.filter((p) => p.verified && p.rating >= 4.6).slice(0, 6);
+  const popularCategories = [...categories]
+    .sort((a, b) => b.providersCount - a.providersCount)
+    .slice(0, 12);
+
 
   return (
     <>

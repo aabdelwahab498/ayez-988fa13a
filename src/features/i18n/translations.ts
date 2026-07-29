@@ -2,6 +2,7 @@ import { nsDirectory } from "./ns/directory";
 import { nsProvider } from "./ns/provider";
 import { nsRequests } from "./ns/requests";
 import { nsDashboard } from "./ns/dashboard";
+import { nsMarketplace } from "./ns/marketplace";
 
 export type Language = "ar" | "en";
 
@@ -174,6 +175,7 @@ export const translations = {
     ...nsProvider.ar,
     ...nsRequests.ar,
     ...nsDashboard.ar,
+    ...nsMarketplace.ar,
   },
   en: {
     ...base.en,
@@ -181,6 +183,7 @@ export const translations = {
     ...nsProvider.en,
     ...nsRequests.en,
     ...nsDashboard.en,
+    ...nsMarketplace.en,
   },
 };
 

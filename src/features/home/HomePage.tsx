@@ -196,9 +196,15 @@ export function HomePage() {
               {t("home.cta.text")}
             </p>
           </div>
-          <Button asChild variant="accent" size="lg">
-            <Link to="/provider-dashboard">{t("nav.joinProvider")}</Link>
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="accent" size="lg">
+              <Link to="/join-provider">{t("mkt.home.cta.join")}</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link to="/pricing">{t("mkt.home.cta.pricing")}</Link>
+            </Button>
+          </div>
+
         </div>
       </section>
     </>

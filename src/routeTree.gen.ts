@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RequestServiceRouteImport } from './routes/request-service'
 import { Route as ProviderDashboardRouteImport } from './routes/provider-dashboard'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as MyRequestsRouteImport } from './routes/my-requests'
+import { Route as JoinProviderRouteImport } from './routes/join-provider'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
@@ -32,9 +34,19 @@ const ProviderDashboardRoute = ProviderDashboardRouteImport.update({
   path: '/provider-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MyRequestsRoute = MyRequestsRouteImport.update({
   id: '/my-requests',
   path: '/my-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinProviderRoute = JoinProviderRouteImport.update({
+  id: '/join-provider',
+  path: '/join-provider',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -56,7 +68,9 @@ const ProviderIdRoute = ProviderIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/join-provider': typeof JoinProviderRoute
   '/my-requests': typeof MyRequestsRoute
+  '/pricing': typeof PricingRoute
   '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
@@ -65,7 +79,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/join-provider': typeof JoinProviderRoute
   '/my-requests': typeof MyRequestsRoute
+  '/pricing': typeof PricingRoute
   '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
@@ -75,7 +91,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/join-provider': typeof JoinProviderRoute
   '/my-requests': typeof MyRequestsRoute
+  '/pricing': typeof PricingRoute
   '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
@@ -86,7 +104,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/join-provider'
     | '/my-requests'
+    | '/pricing'
     | '/provider-dashboard'
     | '/request-service'
     | '/services'
@@ -95,7 +115,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/join-provider'
     | '/my-requests'
+    | '/pricing'
     | '/provider-dashboard'
     | '/request-service'
     | '/services'
@@ -104,7 +126,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/join-provider'
     | '/my-requests'
+    | '/pricing'
     | '/provider-dashboard'
     | '/request-service'
     | '/services'
@@ -114,7 +138,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  JoinProviderRoute: typeof JoinProviderRoute
   MyRequestsRoute: typeof MyRequestsRoute
+  PricingRoute: typeof PricingRoute
   ProviderDashboardRoute: typeof ProviderDashboardRoute
   RequestServiceRoute: typeof RequestServiceRoute
   ServicesRoute: typeof ServicesRoute
@@ -144,11 +170,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProviderDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/my-requests': {
       id: '/my-requests'
       path: '/my-requests'
       fullPath: '/my-requests'
       preLoaderRoute: typeof MyRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join-provider': {
+      id: '/join-provider'
+      path: '/join-provider'
+      fullPath: '/join-provider'
+      preLoaderRoute: typeof JoinProviderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -178,7 +218,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  JoinProviderRoute: JoinProviderRoute,
   MyRequestsRoute: MyRequestsRoute,
+  PricingRoute: PricingRoute,
   ProviderDashboardRoute: ProviderDashboardRoute,
   RequestServiceRoute: RequestServiceRoute,
   ServicesRoute: ServicesRoute,

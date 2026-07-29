@@ -17,6 +17,12 @@ import { providers } from "@/mocks/providers";
 import { governorates } from "@/mocks/locations";
 import { formatArabicDate } from "@/core/utils";
 import { useI18n } from "@/features/i18n/I18nProvider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LeadsPanel } from "@/features/admin/panels/LeadsPanel";
+import { RevenuePanel } from "@/features/admin/panels/RevenuePanel";
+import { ApprovalsPanel } from "@/features/admin/panels/ApprovalsPanel";
+import { CampaignsPanel } from "@/features/admin/panels/CampaignsPanel";
+
 
 export function AdminPage() {
   const { t, td, n } = useI18n();
@@ -29,7 +35,26 @@ export function AdminPage() {
         <p className="mt-1.5 text-sm text-muted-foreground">{t("dash.admin.subtitle")}</p>
       </header>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <Tabs defaultValue="overview" className="mt-6">
+        <TabsList className="flex w-full flex-wrap justify-start gap-1 overflow-x-auto">
+          {(
+            [
+              ["overview", "mkt.admin.tab.overview"],
+              ["leads", "mkt.admin.tab.leads"],
+              ["revenue", "mkt.admin.tab.revenue"],
+              ["approvals", "mkt.admin.tab.approvals"],
+              ["campaigns", "mkt.admin.tab.campaigns"],
+            ] as const
+          ).map(([value, key]) => (
+            <TabsTrigger key={value} value={value}>
+              {t(key)}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        <TabsContent value="overview" className="mt-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+
         <DashboardStatCard label={t("dash.admin.stat.users")} value={adminStats.users} icon={Users} />
         <DashboardStatCard
           label={t("dash.admin.stat.providers")}
@@ -158,6 +183,22 @@ export function AdminPage() {
           </div>
         </section>
       </div>
+        </TabsContent>
+
+        <TabsContent value="leads" className="mt-6">
+          <LeadsPanel />
+        </TabsContent>
+        <TabsContent value="revenue" className="mt-6">
+          <RevenuePanel />
+        </TabsContent>
+        <TabsContent value="approvals" className="mt-6">
+          <ApprovalsPanel />
+        </TabsContent>
+        <TabsContent value="campaigns" className="mt-6">
+          <CampaignsPanel />
+        </TabsContent>
+      </Tabs>
     </div>
+
   );
 }

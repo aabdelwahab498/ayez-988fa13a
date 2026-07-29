@@ -14,11 +14,14 @@ import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { SearchBarWidget } from "@/components/business/SearchBarWidget";
 import { CategoryCard } from "@/components/business/CategoryCard";
+import { SectorCard } from "@/components/business/SectorCard";
 import { ProviderGrid } from "@/components/business/ProviderGrid";
 import { categories } from "@/mocks/categories";
+import { sectors } from "@/mocks/sectors";
 import { providers } from "@/mocks/providers";
 import { APP_TAGLINE } from "@/core/constants";
 import { defaultSearch } from "@/features/services/searchSchema";
+
 
 const steps = [
   {

@@ -1,7 +1,8 @@
 import type { RequestStatus, SortKey } from "@/core/types";
 
 export const APP_NAME = "دليل الخدمات";
-export const APP_TAGLINE = "أفضل الخدمات بالقرب منك، في دقائق";
+export const APP_TAGLINE = "كل الخدمات والعيادات والمتاجر في مصر… في دليل واحد";
+
 
 export const STATUS_LABELS: Record<RequestStatus, string> = {
   new: "جديد",
@@ -34,7 +35,7 @@ export const REQUEST_STEPS = [
 
 export const PUBLIC_NAV = [
   { to: "/", label: "الرئيسية" },
-  { to: "/services", label: "الخدمات" },
+  { to: "/services", label: "الدليل" },
   { to: "/request-service", label: "اطلب خدمة" },
   { to: "/my-requests", label: "طلباتي" },
 ];

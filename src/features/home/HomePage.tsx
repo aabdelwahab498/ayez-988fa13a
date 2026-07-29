@@ -14,11 +14,14 @@ import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { SearchBarWidget } from "@/components/business/SearchBarWidget";
 import { CategoryCard } from "@/components/business/CategoryCard";
+import { SectorCard } from "@/components/business/SectorCard";
 import { ProviderGrid } from "@/components/business/ProviderGrid";
 import { categories } from "@/mocks/categories";
+import { sectors } from "@/mocks/sectors";
 import { providers } from "@/mocks/providers";
 import { APP_TAGLINE } from "@/core/constants";
 import { defaultSearch } from "@/features/services/searchSchema";
+
 
 const steps = [
   {
@@ -58,6 +61,10 @@ const trust = [
 
 export function HomePage() {
   const featured = providers.filter((p) => p.verified && p.rating >= 4.6).slice(0, 6);
+  const popularCategories = [...categories]
+    .sort((a, b) => b.providersCount - a.providersCount)
+    .slice(0, 12);
+
 
   return (
     <>
@@ -66,15 +73,17 @@ export function HomePage() {
           <div className="min-w-0">
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-foreground/20 bg-card/10 px-3 py-1 text-xs font-semibold">
               <ShieldCheck className="size-3.5" />
-              منصة الخدمات الأولى في مصر
+              الدليل الرقمي الأشمل في مصر
             </span>
             <h1 className="mt-5 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
               {APP_TAGLINE}
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-brand-foreground/80 sm:text-base">
-              ابحث عن فنيين وشركات خدمات موثقة في جميع محافظات مصر، قارن التقييمات
-              والأسعار ومناطق التغطية، وأرسل طلبك في خطوات بسيطة.
+              دليل واحد يجمع مقدمي الخدمات والعيادات والمتاجر وشركات النقل والخدمات
+              المهنية في جميع محافظات مصر. ابحث بالتصنيف أو التخصص أو الموقع، وقارن
+              التقييمات والأسعار قبل ما تتواصل.
             </p>
+
             <div className="mt-6 flex flex-wrap gap-6 text-sm text-brand-foreground/80">
               <div>
                 <p className="text-2xl font-extrabold text-brand-foreground">+٩٦٦</p>
@@ -108,15 +117,27 @@ export function HomePage() {
       </section>
 
       <Section
-        title="الخدمات الأكثر طلبًا"
-        description="اختر الخدمة التي تحتاجها وابدأ البحث في محافظتك"
+        title="تصفّح الدليل حسب القطاع"
+        description="خدمات فنية، عيادات ورعاية صحية، متاجر محلية، نقل وشحن، وخدمات مهنية"
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {sectors.map((s) => (
+            <SectorCard key={s.slug} sector={s} />
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        title="التصنيفات الأكثر بحثًا"
+        description="اختر التصنيف الذي تحتاجه وابدأ البحث في محافظتك"
       >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {categories.map((c) => (
+          {popularCategories.map((c) => (
             <CategoryCard key={c.id} category={c} />
           ))}
         </div>
       </Section>
+
 
       <Section
         title="مقدمو خدمة موثقون ومميزون"

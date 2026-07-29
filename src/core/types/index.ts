@@ -33,14 +33,34 @@ export interface EgyptLocation {
   area?: string;
 }
 
+/** Top-level directory sectors covered by the platform. */
+export type SectorSlug =
+  | "services"
+  | "medical"
+  | "stores"
+  | "transport"
+  | "professional";
+
+export interface Sector {
+  slug: SectorSlug;
+  name: string;
+  shortName: string;
+  icon: string;
+  description: string;
+  /** Label used for the category selector inside this sector. */
+  searchLabel: string;
+}
+
 export interface Category {
   id: ID;
   name: string;
   slug: string;
+  sector: SectorSlug;
   icon: string;
   description: string;
   providersCount: number;
 }
+
 
 export interface ProviderService {
   id: ID;
@@ -75,7 +95,11 @@ export interface Provider {
   id: ID;
   name: string;
   slug: string;
+  sector: SectorSlug;
+  /** Medical specialty, product line, or professional focus shown on the card. */
+  specialty?: string;
   profileImage: string;
+
   categories: string[];
   services: ProviderService[];
   rating: number;
@@ -129,6 +153,7 @@ export interface User {
 export type SortKey = "rating" | "relevance" | "response" | "price";
 
 export interface ProviderFilters {
+  sector?: SectorSlug;
   category?: string;
   governorate?: string;
   city?: string;

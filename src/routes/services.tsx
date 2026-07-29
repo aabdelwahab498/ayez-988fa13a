@@ -7,19 +7,22 @@ export const Route = createFileRoute("/services")({
   validateSearch: validateServicesSearch,
   head: () => ({
     meta: [
-      { title: "ابحث عن مقدمي الخدمات في مصر | دليل الخدمات" },
+      { title: "دليل الخدمات والعيادات والمتاجر في مصر | بحث بالموقع" },
       {
         name: "description",
         content:
-          "قارن مقدمي الخدمات حسب نوع الخدمة والمحافظة والمدينة والتقييم والسعر وسرعة الاستجابة.",
+          "ابحث في دليل مصر الشامل: خدمات فنية، عيادات وتخصصات طبية، متاجر، شركات نقل وشحن، وخدمات مهنية — حسب التصنيف والمحافظة والتقييم والسعر.",
       },
-      { property: "og:title", content: "نتائج البحث عن مقدمي الخدمات" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "نتائج البحث في دليل الخدمات" },
       {
         property: "og:description",
-        content: "تصفية دقيقة حسب المحافظة والمدينة والتقييم والسعر.",
+        content: "تصفية دقيقة حسب القطاع والتخصص والمحافظة والمدينة والتقييم.",
       },
     ],
   }),
+
   component: ServicesRoute,
 });
 

@@ -1,4 +1,7 @@
 import type { Provider, Review, ServiceCoverage } from "@/core/types";
+import { categoryBySlug } from "@/mocks/categories";
+import { directoryListings } from "@/mocks/directoryListings";
+
 
 const img = (seed: string, w = 600, h = 400) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`;
@@ -31,7 +34,7 @@ const review = (
   location: string,
 ): Review => ({ id, providerId, authorName, rating, comment, date, location });
 
-export const providers: Provider[] = [
+const serviceProviders: Omit<Provider, "sector">[] = [
   {
     id: "1",
     name: "محمد عبد الرحمن للسباكة",
@@ -438,4 +441,18 @@ export const providers: Provider[] = [
   },
 ];
 
+/** Home-service providers keep their sector derived from their category. */
+const servicesWithSector: Provider[] = serviceProviders.map((p) => ({
+  ...p,
+  sector: "services" as const,
+  specialty: p.categories
+    .map((slug) => categoryBySlug(slug)?.name)
+    .filter(Boolean)
+    .join(" • "),
+}));
+
+/** Full directory across every sector the platform covers. */
+export const providers: Provider[] = [...servicesWithSector, ...directoryListings];
+
 export const providerById = (id?: string) => providers.find((p) => p.id === id);
+

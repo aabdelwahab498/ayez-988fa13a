@@ -21,10 +21,11 @@ import { ProviderGrid } from "@/components/business/ProviderGrid";
 import { EmptyState } from "@/components/common/EmptyState";
 import { providers } from "@/mocks/providers";
 import { categoryBySlug } from "@/mocks/categories";
+import { sectors, sectorBySlug } from "@/mocks/sectors";
 import { filterProviders, locationLabel } from "@/core/utils";
 import { SORT_OPTIONS } from "@/core/constants";
 import { defaultSearch, type ServicesSearch } from "./searchSchema";
-import type { SortKey } from "@/core/types";
+import type { SortKey, SectorSlug } from "@/core/types";
 
 const routeApi = getRouteApi("/services");
 
@@ -40,6 +41,7 @@ export function ServicesPage() {
   const results = useMemo(
     () =>
       filterProviders(providers, {
+        sector: (search.sector || undefined) as SectorSlug | undefined,
         category: search.category || undefined,
         governorate: search.governorate || undefined,
         city: search.city || undefined,
@@ -53,7 +55,10 @@ export function ServicesPage() {
     [search],
   );
 
-  const categoryName = categoryBySlug(search.category)?.name ?? "كل الخدمات";
+  const activeSector = sectorBySlug(search.sector);
+  const headingSubject =
+    categoryBySlug(search.category)?.name ?? activeSector?.name ?? "كل الأنشطة والخدمات";
+  const categoryName = headingSubject;
   const place = locationLabel({
     governorate: search.governorate || undefined,
     city: search.city || undefined,
@@ -66,13 +71,36 @@ export function ServicesPage() {
     <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-10">
       <header className="mb-6">
         <h1 className="text-xl font-extrabold text-foreground sm:text-2xl">
-          {categoryName} في {place}
+          {headingSubject} في {place}
         </h1>
         <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted-foreground">
           <MapPin className="size-4 shrink-0" />
-          {results.length.toLocaleString("ar-EG")} مقدم خدمة يغطي هذا الموقع
+          {results.length.toLocaleString("ar-EG")} نشاط مسجل يغطي هذا الموقع
         </p>
+
+        <div className="mt-4 -mx-4 overflow-x-auto px-4 lg:mx-0 lg:px-0">
+          <div className="flex w-max gap-2">
+            <Button
+              variant={search.sector ? "outline" : "brand"}
+              size="sm"
+              onClick={() => patch({ sector: "", category: "" })}
+            >
+              كل القطاعات
+            </Button>
+            {sectors.map((s) => (
+              <Button
+                key={s.slug}
+                variant={search.sector === s.slug ? "brand" : "outline"}
+                size="sm"
+                onClick={() => patch({ sector: s.slug, category: "" })}
+              >
+                {s.shortName}
+              </Button>
+            ))}
+          </div>
+        </div>
       </header>
+
 
       <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="hidden lg:block">

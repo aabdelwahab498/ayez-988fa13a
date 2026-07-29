@@ -13,10 +13,13 @@ export function ProviderCard({ provider }: { provider: Provider }) {
     ? { scope: "nationwide" as const, label: "متاح في جميع محافظات مصر" }
     : provider.coverage[0];
 
-  const categoryNames = provider.categories
-    .map((slug) => categories.find((c) => c.slug === slug)?.name)
-    .filter(Boolean)
-    .join(" • ");
+  const categoryNames =
+    provider.specialty ||
+    provider.categories
+      .map((slug) => categories.find((c) => c.slug === slug)?.name)
+      .filter(Boolean)
+      .join(" • ");
+
 
   return (
     <article className="card-surface flex flex-col p-4 transition-shadow hover:shadow-elevated">

@@ -22,7 +22,7 @@ export function AdminSidebar({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex items-center justify-between gap-2 border-b border-sidebar-border px-4 py-4">
         <Link to="/admin" onClick={onNavigate} className="flex items-center gap-3">
-          <BrandLogo size="sm" />
+          <BrandLogo size="sm" tone="invert" showText={false} />
           <span className="min-w-0">
             <span className="block truncate text-sm font-extrabold">{t("adm.brand")}</span>
             <span className="block truncate text-xs text-sidebar-foreground/60">{t("adm.brand.sub")}</span>

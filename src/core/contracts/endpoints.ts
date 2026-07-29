@@ -1,0 +1,155 @@
+/**
+ * AYEZ API — canonical endpoint map (v1).
+ *
+ * One place where web, Flutter and the ASP.NET Core team agree on routes.
+ * Paths are relative to `API_V1_BASE`. Nothing is called today.
+ */
+
+export const API_V1_BASE = "/api/v1";
+
+export const API_ENDPOINTS = {
+  identity: {
+    register: "/identity/register",
+    login: "/identity/login",
+    refresh: "/identity/refresh",
+    logout: "/identity/logout",
+    me: "/identity/me",
+    updateMe: "/identity/me",
+    changePassword: "/identity/me/password",
+    requestOtp: "/identity/otp/request",
+    verifyOtp: "/identity/otp/verify",
+    devices: "/identity/me/devices",
+    users: "/identity/users",
+    user: (id: string) => `/identity/users/${id}`,
+    roles: "/identity/roles",
+    permissions: "/identity/permissions",
+    assignRole: (id: string) => `/identity/users/${id}/roles`,
+  },
+  marketplace: {
+    sectors: "/marketplace/sectors",
+    categories: "/marketplace/categories",
+    category: (slug: string) => `/marketplace/categories/${slug}`,
+    services: "/marketplace/services",
+    providers: "/marketplace/providers",
+    provider: (id: string) => `/marketplace/providers/${id}`,
+    providerServices: (id: string) => `/marketplace/providers/${id}/services`,
+    providerCoverage: (id: string) => `/marketplace/providers/${id}/coverage`,
+    providerGallery: (id: string) => `/marketplace/providers/${id}/gallery`,
+    providerRelated: (id: string) => `/marketplace/providers/${id}/related`,
+    featured: "/marketplace/providers/featured",
+    applications: "/marketplace/provider-applications",
+    application: (id: string) => `/marketplace/provider-applications/${id}`,
+    verification: (id: string) => `/marketplace/providers/${id}/verification`,
+  },
+  location: {
+    countries: "/locations/countries",
+    governorates: "/locations/governorates",
+    governorate: (code: string) => `/locations/governorates/${code}`,
+    cities: (gov: string) => `/locations/governorates/${gov}/cities`,
+    areas: (gov: string, city: string) =>
+      `/locations/governorates/${gov}/cities/${city}/areas`,
+    resolve: "/locations/resolve",
+    coverage: "/locations/coverage",
+  },
+  search: {
+    unified: "/search",
+    providers: "/search/providers",
+    services: "/search/services",
+    locations: "/search/locations",
+    suggest: "/search/suggest",
+    filters: "/search/filters",
+  },
+  requests: {
+    list: "/service-requests",
+    create: "/service-requests",
+    detail: (id: string) => `/service-requests/${id}`,
+    update: (id: string) => `/service-requests/${id}`,
+    cancel: (id: string) => `/service-requests/${id}/cancel`,
+    status: (id: string) => `/service-requests/${id}/status`,
+    timeline: (id: string) => `/service-requests/${id}/timeline`,
+    attachments: (id: string) => `/service-requests/${id}/attachments`,
+    assign: (id: string) => `/service-requests/${id}/assign`,
+    mine: "/service-requests/mine",
+    leads: "/leads",
+    lead: (id: string) => `/leads/${id}`,
+    leadStatus: (id: string) => `/leads/${id}/status`,
+    leadAccept: (id: string) => `/leads/${id}/accept`,
+    leadDecline: (id: string) => `/leads/${id}/decline`,
+  },
+  reviews: {
+    list: "/reviews",
+    create: "/reviews",
+    detail: (id: string) => `/reviews/${id}`,
+    byProvider: (id: string) => `/marketplace/providers/${id}/reviews`,
+    providerRating: (id: string) => `/marketplace/providers/${id}/rating`,
+    moderationQueue: "/reviews/moderation",
+    moderate: (id: string) => `/reviews/${id}/moderation`,
+    report: (id: string) => `/reviews/${id}/report`,
+  },
+  billing: {
+    plans: "/billing/plans",
+    markets: "/billing/markets",
+    subscriptions: "/billing/subscriptions",
+    subscription: (id: string) => `/billing/subscriptions/${id}`,
+    mySubscription: "/billing/subscriptions/mine",
+    subscribe: "/billing/subscriptions",
+    cancel: (id: string) => `/billing/subscriptions/${id}/cancel`,
+    invoices: "/billing/invoices",
+    invoice: (id: string) => `/billing/invoices/${id}`,
+    invoicePdf: (id: string) => `/billing/invoices/${id}/pdf`,
+    paymentMethods: "/billing/payment-methods",
+    webhook: "/billing/webhooks/payment",
+  },
+  ads: {
+    campaigns: "/ads/campaigns",
+    campaign: (id: string) => `/ads/campaigns/${id}`,
+    campaignMetrics: (id: string) => `/ads/campaigns/${id}/metrics`,
+    banners: "/ads/banners",
+    sponsored: "/ads/sponsored-providers",
+    targeting: "/ads/targeting-options",
+    impression: "/ads/events/impression",
+    click: "/ads/events/click",
+  },
+  notifications: {
+    list: "/notifications",
+    detail: (id: string) => `/notifications/${id}`,
+    markRead: (id: string) => `/notifications/${id}/read`,
+    markAllRead: "/notifications/read-all",
+    unreadCount: "/notifications/unread-count",
+    preferences: "/notifications/preferences",
+    registerDevice: "/notifications/devices",
+    unregisterDevice: (token: string) => `/notifications/devices/${token}`,
+    templates: "/notifications/templates",
+  },
+  analytics: {
+    marketplace: "/analytics/marketplace",
+    admin: "/analytics/admin",
+    provider: (id: string) => `/analytics/providers/${id}`,
+    kpis: "/analytics/kpis",
+    reports: "/analytics/reports",
+    report: (key: string) => `/analytics/reports/${key}`,
+    export: (key: string) => `/analytics/reports/${key}/export`,
+  },
+  ai: {
+    smartSearch: "/ai/search",
+    match: "/ai/match",
+    recommendations: "/ai/recommendations",
+    reviewAnalysis: "/ai/reviews/analyze",
+    providerRanking: "/ai/ranking",
+  },
+  media: {
+    uploadTicket: "/media/upload-ticket",
+    asset: (id: string) => `/media/assets/${id}`,
+  },
+} as const;
+
+/** HTTP verb per operation, for the handoff doc and for future codegen. */
+export const API_METHODS = {
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  PATCH: "PATCH",
+  DELETE: "DELETE",
+} as const;
+
+export type HttpMethod = keyof typeof API_METHODS;

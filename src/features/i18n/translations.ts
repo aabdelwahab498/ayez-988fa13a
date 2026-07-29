@@ -1,3 +1,8 @@
+import { nsDirectory } from "./ns/directory";
+import { nsProvider } from "./ns/provider";
+import { nsRequests } from "./ns/requests";
+import { nsDashboard } from "./ns/dashboard";
+
 export type Language = "ar" | "en";
 
 export const LANGUAGES: { code: Language; label: string; native: string }[] = [
@@ -5,7 +10,7 @@ export const LANGUAGES: { code: Language; label: string; native: string }[] = [
   { code: "en", label: "English", native: "English" },
 ];
 
-export const translations = {
+const base = {
   ar: {
     "app.name": "دليل الخدمات",
     "app.tagline": "كل الخدمات والعيادات والمتاجر في مصر… في دليل واحد",
@@ -160,6 +165,23 @@ export const translations = {
     "footer.address": "New Cairo, Arab Republic of Egypt",
     "footer.rights": "All rights reserved ©",
   },
-} as const;
+};
+
+export const translations = {
+  ar: {
+    ...base.ar,
+    ...nsDirectory.ar,
+    ...nsProvider.ar,
+    ...nsRequests.ar,
+    ...nsDashboard.ar,
+  },
+  en: {
+    ...base.en,
+    ...nsDirectory.en,
+    ...nsProvider.en,
+    ...nsRequests.en,
+    ...nsDashboard.en,
+  },
+};
 
 export type TranslationKey = keyof (typeof translations)["ar"];

@@ -16,36 +16,41 @@ import { adminStats, customerRequests } from "@/mocks/requests";
 import { providers } from "@/mocks/providers";
 import { governorates } from "@/mocks/locations";
 import { formatArabicDate } from "@/core/utils";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function AdminPage() {
+  const { t, td, n } = useI18n();
   const topGovernorates = governorates.slice(0, 6);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
       <header>
-        <h1 className="text-xl font-extrabold text-foreground sm:text-2xl">لوحة الإدارة</h1>
-        <p className="mt-1.5 text-sm text-muted-foreground">
-          نظرة عامة على نشاط المنصة في جميع المحافظات
-        </p>
+        <h1 className="text-xl font-extrabold text-foreground sm:text-2xl">{t("dash.admin.title")}</h1>
+        <p className="mt-1.5 text-sm text-muted-foreground">{t("dash.admin.subtitle")}</p>
       </header>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <DashboardStatCard label="المستخدمون" value={adminStats.users} icon={Users} />
+        <DashboardStatCard label={t("dash.admin.stat.users")} value={adminStats.users} icon={Users} />
         <DashboardStatCard
-          label="مقدمو الخدمة"
+          label={t("dash.admin.stat.providers")}
           value={adminStats.providers}
           icon={Briefcase}
           tone="orange"
         />
         <DashboardStatCard
-          label="طلبات جديدة"
+          label={t("dash.admin.stat.newRequests")}
           value={adminStats.newRequests}
           icon={Inbox}
           tone="success"
         />
-        <DashboardStatCard label="التقييمات" value={adminStats.reviews} icon={Star} tone="muted" />
         <DashboardStatCard
-          label="محافظات نشطة"
+          label={t("dash.admin.stat.reviews")}
+          value={adminStats.reviews}
+          icon={Star}
+          tone="muted"
+        />
+        <DashboardStatCard
+          label={t("dash.admin.stat.activeGovernorates")}
           value={adminStats.activeGovernorates}
           icon={MapPinned}
         />
@@ -54,37 +59,47 @@ export function AdminPage() {
       <section className="mt-8">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
           <h2 className="min-w-0 truncate text-lg font-extrabold text-foreground">
-            مقدمو الخدمة
+            {t("dash.admin.providers.title")}
           </h2>
-          <Input className="w-44 sm:w-64" placeholder="بحث بالاسم..." aria-label="بحث" />
+          <Input
+            className="w-44 sm:w-64"
+            placeholder={t("dash.admin.providers.searchPlaceholder")}
+            aria-label={t("dash.admin.providers.searchAria")}
+          />
         </div>
         <div className="card-surface mt-4 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-right">الاسم</TableHead>
-                <TableHead className="text-right">التقييم</TableHead>
-                <TableHead className="text-right">خدمات منفذة</TableHead>
-                <TableHead className="text-right">التوثيق</TableHead>
-                <TableHead className="text-right">إجراء</TableHead>
+                <TableHead className="text-right">{t("dash.admin.providers.col.name")}</TableHead>
+                <TableHead className="text-right">{t("dash.admin.providers.col.rating")}</TableHead>
+                <TableHead className="text-right">
+                  {t("dash.admin.providers.col.completedJobs")}
+                </TableHead>
+                <TableHead className="text-right">
+                  {t("dash.admin.providers.col.verification")}
+                </TableHead>
+                <TableHead className="text-right">{t("dash.admin.providers.col.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {providers.map((p) => (
                 <TableRow key={p.id}>
-                  <TableCell className="font-semibold text-foreground">{p.name}</TableCell>
+                  <TableCell className="font-semibold text-foreground">{td(p.name)}</TableCell>
                   <TableCell>{p.rating.toFixed(1)}</TableCell>
-                  <TableCell>{p.completedJobs.toLocaleString("ar-EG")}</TableCell>
+                  <TableCell>{n(p.completedJobs)}</TableCell>
                   <TableCell>
                     {p.verified ? (
                       <VerifiedBadge />
                     ) : (
-                      <span className="text-xs text-muted-foreground">بانتظار المراجعة</span>
+                      <span className="text-xs text-muted-foreground">
+                        {t("dash.admin.providers.pendingReview")}
+                      </span>
                     )}
                   </TableCell>
                   <TableCell>
                     <Button size="sm" variant="soft">
-                      مراجعة
+                      {t("dash.admin.providers.review")}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -96,14 +111,16 @@ export function AdminPage() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section>
-          <h2 className="text-lg font-extrabold text-foreground">أحدث الطلبات</h2>
+          <h2 className="text-lg font-extrabold text-foreground">
+            {t("dash.admin.recentRequests.title")}
+          </h2>
           <div className="mt-4 space-y-3">
             {customerRequests.slice(0, 4).map((r) => (
               <div key={r.id} className="card-surface p-4">
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                   <div className="min-w-0">
                     <p className="truncate font-bold text-foreground">
-                      {r.categoryName} — {r.locationLabel}
+                      {td(r.categoryName)} — {td(r.locationLabel)}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {r.reference} • {formatArabicDate(r.createdAt)}
@@ -117,7 +134,9 @@ export function AdminPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-extrabold text-foreground">التغطية حسب المحافظة</h2>
+          <h2 className="text-lg font-extrabold text-foreground">
+            {t("dash.admin.coverageByGovernorate.title")}
+          </h2>
           <div className="card-surface mt-4 divide-y divide-border">
             {topGovernorates.map((g, i) => {
               const count = providers.filter(
@@ -127,9 +146,11 @@ export function AdminPage() {
               ).length;
               return (
                 <div key={g.id} className="flex items-center justify-between gap-4 p-4">
-                  <span className="min-w-0 truncate font-semibold text-foreground">{g.name}</span>
+                  <span className="min-w-0 truncate font-semibold text-foreground">{td(g.name)}</span>
                   <span className="shrink-0 text-sm text-muted-foreground">
-                    {(count * (6 - i) + 12).toLocaleString("ar-EG")} مقدم خدمة
+                    {t("dash.admin.coverageByGovernorate.providerCount", {
+                      count: n(count * (6 - i) + 12),
+                    })}
                   </span>
                 </div>
               );

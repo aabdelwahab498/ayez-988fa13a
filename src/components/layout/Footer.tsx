@@ -6,7 +6,7 @@ import { categories } from "@/mocks/categories";
 import { defaultSearch } from "@/features/services/searchSchema";
 
 export function Footer() {
-  const { t } = useI18n();
+  const { t, td } = useI18n();
   return (
     <footer className="mt-16 border-t border-border bg-brand text-brand-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-4 lg:px-8">
@@ -31,7 +31,7 @@ export function Footer() {
                   search={{ ...defaultSearch, category: c.slug }}
                   className="hover:text-accent-orange"
                 >
-                  {c.name}
+                  {td(c.name)}
                 </Link>
               </li>
             ))}

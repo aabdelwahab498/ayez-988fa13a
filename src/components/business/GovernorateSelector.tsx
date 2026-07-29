@@ -6,13 +6,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { governorates } from "@/mocks/locations";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 export const ALL_VALUE = "__all__";
 
 export function GovernorateSelector({
   value,
   onChange,
-  placeholder = "كل المحافظات",
+  placeholder,
   className,
 }: {
   value?: string;
@@ -20,21 +21,24 @@ export function GovernorateSelector({
   placeholder?: string;
   className?: string;
 }) {
+  const { t, td } = useI18n();
+  const allLabel = placeholder ?? t("dir.allGovernorates");
+
   return (
     <Select
       value={value ?? ALL_VALUE}
       onValueChange={(v) => onChange(v === ALL_VALUE ? undefined : v)}
     >
-      <SelectTrigger className={className} aria-label="اختر المحافظة">
+      <SelectTrigger className={className} aria-label={t("dir.selectGovernorate")}>
         <SelectValue>
-          {governorates.find((g) => g.slug === value)?.name ?? placeholder}
+          {td(governorates.find((g) => g.slug === value)?.name) || allLabel}
         </SelectValue>
       </SelectTrigger>
       <SelectContent className="max-h-72">
-        <SelectItem value={ALL_VALUE}>{placeholder}</SelectItem>
+        <SelectItem value={ALL_VALUE}>{allLabel}</SelectItem>
         {governorates.map((g) => (
           <SelectItem key={g.slug} value={g.slug}>
-            {g.name}
+            {td(g.name)}
           </SelectItem>
         ))}
       </SelectContent>

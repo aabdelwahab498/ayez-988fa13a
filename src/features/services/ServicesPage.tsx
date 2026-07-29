@@ -1,3 +1,4 @@
+// Directory / search results page + filters + cards
 import { useMemo, useState } from "react";
 import { getRouteApi, useNavigate, Link } from "@tanstack/react-router";
 import { SlidersHorizontal, MapPin } from "lucide-react";
@@ -26,10 +27,12 @@ import { filterProviders, locationLabel } from "@/core/utils";
 import { SORT_OPTIONS } from "@/core/constants";
 import { defaultSearch, type ServicesSearch } from "./searchSchema";
 import type { SortKey, SectorSlug } from "@/core/types";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 const routeApi = getRouteApi("/services");
 
 export function ServicesPage() {
+  const { t, td, n } = useI18n();
   const search = routeApi.useSearch();
   const navigate = routeApi.useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -57,13 +60,15 @@ export function ServicesPage() {
 
   const activeSector = sectorBySlug(search.sector);
   const headingSubject =
-    categoryBySlug(search.category)?.name ?? activeSector?.name ?? "كل الأنشطة والخدمات";
+    td(categoryBySlug(search.category)?.name) || td(activeSector?.name) || t("dir.allActivities");
   const categoryName = headingSubject;
-  const place = locationLabel({
-    governorate: search.governorate || undefined,
-    city: search.city || undefined,
-    area: search.area || undefined,
-  });
+  const place = td(
+    locationLabel({
+      governorate: search.governorate || undefined,
+      city: search.city || undefined,
+      area: search.area || undefined,
+    }),
+  );
 
   const clear = () => navigate({ to: ".", search: defaultSearch });
 
@@ -71,11 +76,11 @@ export function ServicesPage() {
     <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-10">
       <header className="mb-6">
         <h1 className="text-xl font-extrabold text-foreground sm:text-2xl">
-          {headingSubject} في {place}
+          {t("dir.heading.inLocation", { subject: headingSubject, place })}
         </h1>
         <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted-foreground">
           <MapPin className="size-4 shrink-0" />
-          {results.length.toLocaleString("ar-EG")} نشاط مسجل يغطي هذا الموقع
+          {t("dir.results.count", { count: n(results.length) })}
         </p>
 
         <div className="mt-4 -mx-4 overflow-x-auto px-4 lg:mx-0 lg:px-0">
@@ -85,7 +90,7 @@ export function ServicesPage() {
               size="sm"
               onClick={() => patch({ sector: "", category: "" })}
             >
-              كل القطاعات
+              {t("dir.allSectors")}
             </Button>
             {sectors.map((s) => (
               <Button
@@ -94,7 +99,7 @@ export function ServicesPage() {
                 size="sm"
                 onClick={() => patch({ sector: s.slug, category: "" })}
               >
-                {s.shortName}
+                {td(s.shortName)}
               </Button>
             ))}
           </div>
@@ -115,31 +120,31 @@ export function ServicesPage() {
               <SheetTrigger asChild>
                 <Button variant="outline" className="lg:hidden">
                   <SlidersHorizontal className="size-4" />
-                  التصفية
+                  {t("dir.filter")}
                 </Button>
               </SheetTrigger>
               <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
                 <SheetHeader>
-                  <SheetTitle className="text-right">تصفية النتائج</SheetTitle>
+                  <SheetTitle className="text-right">{t("dir.filterResults")}</SheetTitle>
                 </SheetHeader>
                 <div className="mt-4">
                   <FilterPanel filters={search} onChange={patch} onClear={clear} />
                 </div>
                 <Button className="mt-6 w-full" variant="brand" onClick={() => setSheetOpen(false)}>
-                  عرض {results.length.toLocaleString("ar-EG")} نتيجة
+                  {t("dir.showResults", { count: n(results.length) })}
                 </Button>
               </SheetContent>
             </Sheet>
             <div className="hidden lg:block" />
 
             <Select value={search.sort} onValueChange={(v) => patch({ sort: v })}>
-              <SelectTrigger className="w-44" aria-label="ترتيب النتائج">
+              <SelectTrigger className="w-44" aria-label={t("dir.sortResults")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {SORT_OPTIONS.map((o) => (
                   <SelectItem key={o.key} value={o.key}>
-                    {o.label}
+                    {td(o.label)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -150,13 +155,13 @@ export function ServicesPage() {
             <ProviderGrid providers={results} columns={2} />
           ) : (
             <EmptyState
-              title="لا يوجد مقدمو خدمة يغطون هذا الموقع حاليًا"
-              description={`لم نجد مقدمي خدمة لـ ${categoryName} في ${place}. جرّب توسيع نطاق البحث أو مسح بعض عوامل التصفية.`}
-              actionLabel="مسح كل عوامل التصفية"
+              title={t("dir.emptyTitle")}
+              description={t("dir.emptyDescription", { category: categoryName, place })}
+              actionLabel={t("dir.clearFilters")}
               onAction={clear}
             >
               <Button asChild variant="soft">
-                <Link to="/request-service">أرسل طلبك وسنجد لك مقدم خدمة</Link>
+                <Link to="/request-service">{t("dir.sendRequest")}</Link>
               </Button>
             </EmptyState>
           )}

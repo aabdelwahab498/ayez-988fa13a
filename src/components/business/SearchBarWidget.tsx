@@ -15,6 +15,7 @@ import { governorates } from "@/mocks/locations";
 import { categoriesBySector, categoryBySlug } from "@/mocks/categories";
 import { sectors, sectorBySlug } from "@/mocks/sectors";
 import { defaultSearch } from "@/features/services/searchSchema";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 interface SearchBarWidgetProps {
   defaultSector?: string;
@@ -31,6 +32,7 @@ export function SearchBarWidget({
   defaultCity,
   variant = "hero",
 }: SearchBarWidgetProps) {
+  const { t, td } = useI18n();
   const navigate = useNavigate();
   const [sector, setSector] = useState<string | undefined>(defaultSector);
   const [category, setCategory] = useState<string | undefined>(defaultCategory);
@@ -39,7 +41,7 @@ export function SearchBarWidget({
 
   const cities = governorates.find((g) => g.slug === governorate)?.cities ?? [];
   const sectorCategories = categoriesBySector(sector);
-  const categoryLabel = sectorBySlug(sector)?.searchLabel ?? "ما الذي تبحث عنه؟";
+  const categoryLabel = td(sectorBySlug(sector)?.searchLabel) || t("dir.whatAreYouLookingFor");
 
   const submit = () => {
     navigate({
@@ -70,14 +72,16 @@ export function SearchBarWidget({
             setCategory(undefined);
           }}
         >
-          <SelectTrigger className="h-12" aria-label="القطاع">
-            <SelectValue>{sector ? sectorBySlug(sector)?.name : "كل القطاعات"}</SelectValue>
+          <SelectTrigger className="h-12" aria-label={t("dir.sector")}>
+            <SelectValue>
+              {sector ? td(sectorBySlug(sector)?.name) : t("dir.allSectors")}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>كل القطاعات</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("dir.allSectors")}</SelectItem>
             {sectors.map((s) => (
               <SelectItem key={s.slug} value={s.slug}>
-                {s.shortName} — {s.name}
+                {td(s.shortName)} — {td(s.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -88,13 +92,15 @@ export function SearchBarWidget({
           onValueChange={(v) => setCategory(v === ALL_VALUE ? undefined : v)}
         >
           <SelectTrigger className="h-12" aria-label={categoryLabel}>
-            <SelectValue>{category ? categoryBySlug(category)?.name : categoryLabel}</SelectValue>
+            <SelectValue>
+              {category ? td(categoryBySlug(category)?.name) : categoryLabel}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent className="max-h-72">
-            <SelectItem value={ALL_VALUE}>كل التصنيفات</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("dir.allCategories")}</SelectItem>
             {sectorCategories.map((c) => (
               <SelectItem key={c.slug} value={c.slug}>
-                {c.name}
+                {td(c.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -114,20 +120,20 @@ export function SearchBarWidget({
           onValueChange={(v) => setCity(v === ALL_VALUE ? undefined : v)}
           disabled={!cities.length}
         >
-          <SelectTrigger className="h-12" aria-label="المدينة أو المنطقة">
+          <SelectTrigger className="h-12" aria-label={t("dir.cityArea")}>
             <SelectValue>
               {city
-                ? cities.find((c) => c.slug === city)?.name
+                ? td(cities.find((c) => c.slug === city)?.name)
                 : cities.length
-                  ? "كل المدن"
-                  : "المدينة / المنطقة"}
+                  ? t("dir.allCities")
+                  : t("dir.cityArea")}
             </SelectValue>
           </SelectTrigger>
           <SelectContent className="max-h-72">
-            <SelectItem value={ALL_VALUE}>كل المدن</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("dir.allCities")}</SelectItem>
             {cities.map((c) => (
               <SelectItem key={c.slug} value={c.slug}>
-                {c.name}
+                {td(c.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -135,7 +141,7 @@ export function SearchBarWidget({
 
         <Button variant="accent" size="lg" className="h-12 lg:px-8" onClick={submit}>
           <Search className="size-4" />
-          ابحث الآن
+          {t("dir.searchNow")}
         </Button>
       </div>
 
@@ -143,13 +149,13 @@ export function SearchBarWidget({
         type="button"
         className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline"
         onClick={() =>
-          toast.info("تحديد الموقع الحالي غير مفعّل في النسخة التجريبية", {
-            description: "سيتم ربطه لاحقًا بخدمة تحديد المواقع.",
+          toast.info(t("dir.geoDisabledTitle"), {
+            description: t("dir.geoDisabledDesc"),
           })
         }
       >
         <LocateFixed className="size-4" />
-        استخدم موقعي الحالي
+        {t("dir.useCurrentLocation")}
       </button>
     </div>
   );

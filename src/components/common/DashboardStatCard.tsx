@@ -1,3 +1,4 @@
+import { useI18n } from "@/features/i18n/I18nProvider";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,7 @@ export function DashboardStatCard({
   hint?: string;
   tone?: "brand" | "orange" | "success" | "muted";
 }) {
+  const { n } = useI18n();
   const tones = {
     brand: "bg-brand-soft text-brand",
     orange: "bg-accent-orange-soft text-accent-orange",
@@ -27,7 +29,7 @@ export function DashboardStatCard({
         <div className="min-w-0">
           <p className="truncate text-sm text-muted-foreground">{label}</p>
           <p className="mt-1 text-2xl font-extrabold text-foreground">
-            {typeof value === "number" ? value.toLocaleString("ar-EG") : value}
+            {typeof value === "number" ? n(value) : value}
           </p>
           {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
         </div>

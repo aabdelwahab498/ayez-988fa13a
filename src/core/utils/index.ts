@@ -1,22 +1,31 @@
 import type { Provider, ProviderFilters, ServiceCoverage } from "@/core/types";
 import { governorates } from "@/mocks/locations";
+import { utilLanguage, utilLocale, tdRaw } from "./locale";
 
 export function formatEGP(value: number): string {
-  return `${value.toLocaleString("ar-EG")} ج.م`;
+  const formatted = value.toLocaleString(utilLocale());
+  return utilLanguage() === "ar" ? `${formatted} ج.م` : `EGP ${formatted}`;
 }
 
 export function formatPriceRange(from: number, to?: number): string {
-  return to ? `${formatEGP(from)} - ${formatEGP(to)}` : `تبدأ من ${formatEGP(from)}`;
+  if (to) return `${formatEGP(from)} - ${formatEGP(to)}`;
+  return utilLanguage() === "ar"
+    ? `تبدأ من ${formatEGP(from)}`
+    : `From ${formatEGP(from)}`;
 }
 
 export function formatResponseTime(minutes: number): string {
-  if (minutes < 60) return `يرد خلال ${minutes} دقيقة`;
+  const ar = utilLanguage() === "ar";
+  if (minutes < 60) {
+    return ar ? `يرد خلال ${minutes} دقيقة` : `Replies in ${minutes} min`;
+  }
   const hours = Math.round(minutes / 60);
-  return `يرد خلال ${hours} ساعة`;
+  if (ar) return `يرد خلال ${hours} ساعة`;
+  return `Replies in ${hours} ${hours === 1 ? "hour" : "hours"}`;
 }
 
 export function formatArabicDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("ar-EG", {
+  return new Date(iso).toLocaleDateString(utilLocale(), {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -24,12 +33,14 @@ export function formatArabicDate(iso: string): string {
 }
 
 export function governorateName(slug?: string): string | undefined {
-  return governorates.find((g) => g.slug === slug)?.name;
+  const name = governorates.find((g) => g.slug === slug)?.name;
+  return name ? tdRaw(name) : undefined;
 }
 
 export function cityName(govSlug?: string, citySlug?: string): string | undefined {
   const gov = governorates.find((g) => g.slug === govSlug);
-  return gov?.cities.find((c) => c.slug === citySlug)?.name;
+  const name = gov?.cities.find((c) => c.slug === citySlug)?.name;
+  return name ? tdRaw(name) : undefined;
 }
 
 export function areaName(
@@ -39,7 +50,8 @@ export function areaName(
 ): string | undefined {
   const gov = governorates.find((g) => g.slug === govSlug);
   const city = gov?.cities.find((c) => c.slug === citySlug);
-  return city?.areas.find((a) => a.slug === areaSlug)?.name;
+  const name = city?.areas.find((a) => a.slug === areaSlug)?.name;
+  return name ? tdRaw(name) : undefined;
 }
 
 export function locationLabel(filters: {
@@ -52,7 +64,8 @@ export function locationLabel(filters: {
     cityName(filters.governorate, filters.city),
     areaName(filters.governorate, filters.city, filters.area),
   ].filter(Boolean);
-  return parts.length ? parts.join(" - ") : "جميع محافظات مصر";
+  if (parts.length) return parts.join(" - ");
+  return utilLanguage() === "ar" ? "جميع محافظات مصر" : "all Egyptian governorates";
 }
 
 /** Does a provider cover the requested location? */

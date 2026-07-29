@@ -1,5 +1,6 @@
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 interface RatingWidgetProps {
   rating: number;
@@ -16,6 +17,7 @@ export function RatingWidget({
   showValue = true,
   className,
 }: RatingWidgetProps) {
+  const { t, n } = useI18n();
   const starSize = size === "lg" ? "size-5" : size === "md" ? "size-4" : "size-3.5";
   const textSize = size === "lg" ? "text-base" : "text-sm";
 
@@ -41,7 +43,7 @@ export function RatingWidget({
       )}
       {typeof reviewsCount === "number" && (
         <span className={cn("text-muted-foreground", textSize)}>
-          ({reviewsCount.toLocaleString("ar-EG")} تقييم)
+          {t("dir.reviewsCount", { count: n(reviewsCount) })}
         </span>
       )}
     </div>

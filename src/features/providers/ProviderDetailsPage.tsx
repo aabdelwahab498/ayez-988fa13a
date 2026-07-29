@@ -8,8 +8,8 @@ import { VerifiedBadge } from "@/components/common/VerifiedBadge";
 import { ServiceCoverageBadge } from "@/components/common/ServiceCoverageBadge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ProviderGrid } from "@/components/business/ProviderGrid";
-import { providers, providerById } from "@/mocks/providers";
-import { categories } from "@/mocks/categories";
+import { ProfileSkeleton } from "@/components/common/Skeletons";
+import { useCategories, useProvider, useRelatedProviders } from "@/core/hooks/queries";
 import { formatPriceRange, formatResponseTime, formatEGP, formatArabicDate } from "@/core/utils";
 import { useI18n } from "@/features/i18n/I18nProvider";
 
@@ -17,8 +17,18 @@ const routeApi = getRouteApi("/provider/$id");
 
 export function ProviderDetailsPage() {
   const { id } = routeApi.useParams();
-  const provider = providerById(id);
   const { t, td, n } = useI18n();
+  const { data: provider, isPending } = useProvider(id);
+  const { data: related = [] } = useRelatedProviders(id);
+  const { data: categories = [] } = useCategories();
+
+  if (isPending) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 py-10 lg:px-8">
+        <ProfileSkeleton />
+      </div>
+    );
+  }
 
   if (!provider) {
     return (
@@ -34,10 +44,6 @@ export function ProviderDetailsPage() {
       </div>
     );
   }
-
-  const related = providers
-    .filter((p) => p.id !== provider.id && p.categories.some((c) => provider.categories.includes(c)))
-    .slice(0, 3);
 
   const categoryNames = provider.categories
     .map((slug) => categories.find((c) => c.slug === slug)?.name)

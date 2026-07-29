@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { governorates } from "@/mocks/locations";
+import { useGovernorates } from "@/core/hooks/queries";
 import { useI18n } from "@/features/i18n/I18nProvider";
 
 export const ALL_VALUE = "__all__";
@@ -22,6 +22,7 @@ export function GovernorateSelector({
   className?: string;
 }) {
   const { t, td } = useI18n();
+  const { data: governorates = [], isLoading } = useGovernorates();
   const allLabel = placeholder ?? t("dir.allGovernorates");
 
   return (
@@ -29,7 +30,11 @@ export function GovernorateSelector({
       value={value ?? ALL_VALUE}
       onValueChange={(v) => onChange(v === ALL_VALUE ? undefined : v)}
     >
-      <SelectTrigger className={className} aria-label={t("dir.selectGovernorate")}>
+      <SelectTrigger
+        className={className}
+        aria-label={t("dir.selectGovernorate")}
+        aria-busy={isLoading}
+      >
         <SelectValue>
           {td(governorates.find((g) => g.slug === value)?.name) || allLabel}
         </SelectValue>

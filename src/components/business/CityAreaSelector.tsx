@@ -5,8 +5,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { governorates } from "@/mocks/locations";
 import { ALL_VALUE } from "./GovernorateSelector";
+import { useAreas, useCities } from "@/core/hooks/queries";
 import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function CityAreaSelector({
@@ -27,9 +27,8 @@ export function CityAreaSelector({
   className?: string;
 }) {
   const { t, td } = useI18n();
-  const gov = governorates.find((g) => g.slug === governorate);
-  const cities = gov?.cities ?? [];
-  const areas = cities.find((c) => c.slug === city)?.areas ?? [];
+  const { data: cities = [] } = useCities(governorate);
+  const { data: areas = [] } = useAreas(governorate, city);
 
   return (
     <div className={className}>
@@ -37,11 +36,11 @@ export function CityAreaSelector({
         <Select
           value={city ?? ALL_VALUE}
           onValueChange={(v) => onCityChange(v === ALL_VALUE ? undefined : v)}
-          disabled={!gov}
+          disabled={!governorate}
         >
           <SelectTrigger aria-label={t("dir.selectCity")}>
             <SelectValue
-              placeholder={gov ? t("dir.allCities") : t("dir.chooseGovernorateFirst")}
+              placeholder={governorate ? t("dir.allCities") : t("dir.chooseGovernorateFirst")}
             />
           </SelectTrigger>
           <SelectContent className="max-h-72">

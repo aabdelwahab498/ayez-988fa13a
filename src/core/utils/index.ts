@@ -77,6 +77,7 @@ export function filterProviders(
   filters: ProviderFilters,
 ): Provider[] {
   const result = providers.filter((p) => {
+    if (filters.sector && p.sector !== filters.sector) return false;
     if (filters.category && !p.categories.includes(filters.category)) return false;
     if (!coversLocation(p, filters.governorate, filters.city)) return false;
     if (filters.minRating && p.rating < filters.minRating) return false;
@@ -85,13 +86,14 @@ export function filterProviders(
     if (filters.maxPrice && p.priceFrom > filters.maxPrice) return false;
     if (filters.query) {
       const q = filters.query.trim();
-      const haystack = `${p.name} ${p.shortDescription} ${p.services
+      const haystack = `${p.name} ${p.specialty ?? ""} ${p.shortDescription} ${p.services
         .map((s) => s.name)
         .join(" ")}`;
       if (q && !haystack.includes(q)) return false;
     }
     return true;
   });
+
 
   const sort = filters.sort ?? "relevance";
   return [...result].sort((a, b) => {

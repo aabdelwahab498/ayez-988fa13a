@@ -16,8 +16,7 @@ import {
 import { RequestStepper } from "@/components/common/RequestStepper";
 import { EgyptLocationSelector } from "@/components/business/EgyptLocationSelector";
 import { REQUEST_STEPS } from "@/core/constants";
-import { categories, categoryBySlug } from "@/mocks/categories";
-import { providerById } from "@/mocks/providers";
+import { useCategories, useCreateRequest, useProvider } from "@/core/hooks/queries";
 import { locationLabel } from "@/core/utils";
 import type { EgyptLocation } from "@/core/types";
 import { defaultSearch } from "@/features/services/searchSchema";
@@ -28,7 +27,9 @@ const routeApi = getRouteApi("/request-service");
 export function RequestServicePage() {
   const { t, td } = useI18n();
   const { provider: providerId, category: presetCategory } = routeApi.useSearch();
-  const provider = providerById(providerId);
+  const { data: provider } = useProvider(providerId || undefined);
+  const { data: categories = [] } = useCategories();
+  const createRequest = useCreateRequest();
 
   const stepLabels = [
     t("req.step.service"),
@@ -190,7 +191,7 @@ export function RequestServicePage() {
         {step === 4 && (
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
             {[
-              [t("req.summary.service"), td(categoryBySlug(category)?.name) || "-"],
+              [t("req.summary.service"), td(categories.find((c) => c.slug === category)?.name) || "-"],
               [t("req.summary.location"), locationLabel(location)],
               [
                 t("req.summary.time"),

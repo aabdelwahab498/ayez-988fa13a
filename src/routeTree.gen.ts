@@ -9,38 +9,155 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as RequestServiceRouteImport } from './routes/request-service'
+import { Route as ProviderDashboardRouteImport } from './routes/provider-dashboard'
+import { Route as MyRequestsRouteImport } from './routes/my-requests'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProviderIdRouteImport } from './routes/provider.$id'
 
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RequestServiceRoute = RequestServiceRouteImport.update({
+  id: '/request-service',
+  path: '/request-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProviderDashboardRoute = ProviderDashboardRouteImport.update({
+  id: '/provider-dashboard',
+  path: '/provider-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyRequestsRoute = MyRequestsRouteImport.update({
+  id: '/my-requests',
+  path: '/my-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProviderIdRoute = ProviderIdRouteImport.update({
+  id: '/provider/$id',
+  path: '/provider/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/my-requests': typeof MyRequestsRoute
+  '/provider-dashboard': typeof ProviderDashboardRoute
+  '/request-service': typeof RequestServiceRoute
+  '/services': typeof ServicesRoute
+  '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/my-requests': typeof MyRequestsRoute
+  '/provider-dashboard': typeof ProviderDashboardRoute
+  '/request-service': typeof RequestServiceRoute
+  '/services': typeof ServicesRoute
+  '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/my-requests': typeof MyRequestsRoute
+  '/provider-dashboard': typeof ProviderDashboardRoute
+  '/request-service': typeof RequestServiceRoute
+  '/services': typeof ServicesRoute
+  '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/my-requests'
+    | '/provider-dashboard'
+    | '/request-service'
+    | '/services'
+    | '/provider/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/my-requests'
+    | '/provider-dashboard'
+    | '/request-service'
+    | '/services'
+    | '/provider/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/my-requests'
+    | '/provider-dashboard'
+    | '/request-service'
+    | '/services'
+    | '/provider/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  MyRequestsRoute: typeof MyRequestsRoute
+  ProviderDashboardRoute: typeof ProviderDashboardRoute
+  RequestServiceRoute: typeof RequestServiceRoute
+  ServicesRoute: typeof ServicesRoute
+  ProviderIdRoute: typeof ProviderIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/request-service': {
+      id: '/request-service'
+      path: '/request-service'
+      fullPath: '/request-service'
+      preLoaderRoute: typeof RequestServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/provider-dashboard': {
+      id: '/provider-dashboard'
+      path: '/provider-dashboard'
+      fullPath: '/provider-dashboard'
+      preLoaderRoute: typeof ProviderDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-requests': {
+      id: '/my-requests'
+      path: '/my-requests'
+      fullPath: '/my-requests'
+      preLoaderRoute: typeof MyRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +165,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/provider/$id': {
+      id: '/provider/$id'
+      path: '/provider/$id'
+      fullPath: '/provider/$id'
+      preLoaderRoute: typeof ProviderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  MyRequestsRoute: MyRequestsRoute,
+  ProviderDashboardRoute: ProviderDashboardRoute,
+  RequestServiceRoute: RequestServiceRoute,
+  ServicesRoute: ServicesRoute,
+  ProviderIdRoute: ProviderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

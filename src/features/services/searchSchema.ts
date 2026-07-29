@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 
 export const servicesSearchSchema = z.object({
+  sector: fallback(z.string(), "").default(""),
   category: fallback(z.string(), "").default(""),
   governorate: fallback(z.string(), "").default(""),
   city: fallback(z.string(), "").default(""),
@@ -17,6 +18,7 @@ export const servicesSearchSchema = z.object({
 export type ServicesSearch = z.infer<typeof servicesSearchSchema>;
 
 export const defaultSearch: ServicesSearch = {
+  sector: "",
   category: "",
   governorate: "",
   city: "",

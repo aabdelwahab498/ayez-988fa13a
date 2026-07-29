@@ -19,47 +19,25 @@ import { ProviderGrid } from "@/components/business/ProviderGrid";
 import { categories } from "@/mocks/categories";
 import { sectors } from "@/mocks/sectors";
 import { providers } from "@/mocks/providers";
-import { APP_TAGLINE } from "@/core/constants";
+import { useI18n } from "@/features/i18n/I18nProvider";
 import { defaultSearch } from "@/features/services/searchSchema";
 
 
 const steps = [
-  {
-    icon: Search,
-    title: "اختر الخدمة والمكان",
-    text: "حدد نوع الخدمة والمحافظة والمدينة التي تحتاج الخدمة فيها.",
-  },
-  {
-    icon: ListChecks,
-    title: "قارن مقدمي الخدمة",
-    text: "استعرض التقييمات والأسعار ومناطق التغطية وسرعة الاستجابة.",
-  },
-  {
-    icon: Send,
-    title: "أرسل طلبك",
-    text: "أرسل تفاصيل طلبك وسيتواصل معك مقدم الخدمة في أسرع وقت.",
-  },
-];
+  { icon: Search, key: "step1" },
+  { icon: ListChecks, key: "step2" },
+  { icon: Send, key: "step3" },
+] as const;
 
 const trust = [
-  {
-    icon: ShieldCheck,
-    title: "مقدمو خدمة موثقون",
-    text: "نتحقق من هوية وخبرة مقدمي الخدمة قبل ظهورهم على المنصة.",
-  },
-  {
-    icon: Star,
-    title: "تقييمات حقيقية من العملاء",
-    text: "أكثر من 5,000 تقييم من عملاء أتموا خدمات فعلية عبر المنصة.",
-  },
-  {
-    icon: MapPinned,
-    title: "تغطية في جميع أنحاء مصر",
-    text: "من الإسكندرية إلى أسوان، نغطي 27 محافظة بمقدمي خدمة محليين.",
-  },
-];
+  { icon: ShieldCheck, key: "1" },
+  { icon: Star, key: "2" },
+  { icon: MapPinned, key: "3" },
+] as const;
 
 export function HomePage() {
+  const { t, lang } = useI18n();
+  const locale = lang === "ar" ? "ar-EG" : "en-US";
   const featured = providers.filter((p) => p.verified && p.rating >= 4.6).slice(0, 6);
   const popularCategories = [...categories]
     .sort((a, b) => b.providersCount - a.providersCount)
@@ -73,29 +51,33 @@ export function HomePage() {
           <div className="min-w-0">
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-foreground/20 bg-card/10 px-3 py-1 text-xs font-semibold">
               <ShieldCheck className="size-3.5" />
-              الدليل الرقمي الأشمل في مصر
+              {t("home.badge")}
             </span>
             <h1 className="mt-5 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
-              {APP_TAGLINE}
+              {t("app.tagline")}
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-brand-foreground/80 sm:text-base">
-              دليل واحد يجمع مقدمي الخدمات والعيادات والمتاجر وشركات النقل والخدمات
-              المهنية في جميع محافظات مصر. ابحث بالتصنيف أو التخصص أو الموقع، وقارن
-              التقييمات والأسعار قبل ما تتواصل.
+              {t("home.heroText")}
             </p>
 
             <div className="mt-6 flex flex-wrap gap-6 text-sm text-brand-foreground/80">
               <div>
-                <p className="text-2xl font-extrabold text-brand-foreground">+٩٦٦</p>
-                مقدم خدمة موثق
+                <p className="text-2xl font-extrabold text-brand-foreground">
+                  {(966).toLocaleString(locale)}+
+                </p>
+                {t("home.stat.providers")}
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-brand-foreground">٢٧</p>
-                محافظة مغطاة
+                <p className="text-2xl font-extrabold text-brand-foreground">
+                  {(27).toLocaleString(locale)}
+                </p>
+                {t("home.stat.governorates")}
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-brand-foreground">+١٨ ألف</p>
-                عميل مسجل
+                <p className="text-2xl font-extrabold text-brand-foreground">
+                  {(18000).toLocaleString(locale)}+
+                </p>
+                {t("home.stat.customers")}
               </div>
             </div>
           </div>
@@ -103,7 +85,7 @@ export function HomePage() {
           <div className="relative">
             <img
               src={heroImage}
-              alt="طبيبة وفني صيانة ومهندس مصريون يمثلون قطاعات الدليل"
+              alt={t("home.heroAlt")}
               width={1200}
               height={912}
               className="h-64 w-full rounded-2xl object-cover shadow-elevated sm:h-80 lg:h-[26rem]"
@@ -117,8 +99,8 @@ export function HomePage() {
       </section>
 
       <Section
-        title="تصفّح الدليل حسب القطاع"
-        description="خدمات فنية، عيادات ورعاية صحية، متاجر محلية، نقل وشحن، وخدمات مهنية"
+        title={t("home.sectors.title")}
+        description={t("home.sectors.desc")}
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sectors.map((s) => (
@@ -128,8 +110,8 @@ export function HomePage() {
       </Section>
 
       <Section
-        title="التصنيفات الأكثر بحثًا"
-        description="اختر التصنيف الذي تحتاجه وابدأ البحث في محافظتك"
+        title={t("home.categories.title")}
+        description={t("home.categories.desc")}
       >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {popularCategories.map((c) => (
@@ -140,12 +122,12 @@ export function HomePage() {
 
 
       <Section
-        title="مقدمو خدمة موثقون ومميزون"
-        description="أعلى مقدمي الخدمة تقييمًا هذا الشهر"
+        title={t("home.featured.title")}
+        description={t("home.featured.desc")}
         action={
           <Button asChild variant="soft" size="sm">
             <Link to="/services" search={defaultSearch}>
-              عرض الكل
+              {t("home.featured.viewAll")}
               <ArrowLeft className="size-4" />
             </Link>
           </Button>
@@ -157,36 +139,44 @@ export function HomePage() {
       <section className="bg-card py-12 lg:py-16">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <h2 className="text-center text-xl font-extrabold text-foreground sm:text-2xl">
-            كيف يعمل دليل الخدمات؟
+            {t("home.how.title")}
           </h2>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {steps.map((s, i) => (
-              <div key={s.title} className="rounded-xl border border-border bg-background p-6">
+              <div key={s.key} className="rounded-xl border border-border bg-background p-6">
                 <div className="flex items-center gap-3">
                   <span className="grid size-11 place-items-center rounded-xl bg-brand text-brand-foreground">
                     <s.icon className="size-5" />
                   </span>
                   <span className="text-3xl font-extrabold text-border">
-                    {(i + 1).toLocaleString("ar-EG")}
+                    {(i + 1).toLocaleString(locale)}
                   </span>
                 </div>
-                <h3 className="mt-4 text-base font-bold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.text}</p>
+                <h3 className="mt-4 text-base font-bold text-foreground">
+                  {t(`home.how.${s.key}.title`)}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t(`home.how.${s.key}.text`)}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <Section title="لماذا يثق بنا العملاء؟" description="معايير واضحة لجودة الخدمة">
+      <Section title={t("home.trust.title")} description={t("home.trust.desc")}>
         <div className="grid gap-4 md:grid-cols-3">
-          {trust.map((t) => (
-            <div key={t.title} className="card-surface p-6">
+          {trust.map((item) => (
+            <div key={item.key} className="card-surface p-6">
               <span className="grid size-11 place-items-center rounded-xl bg-accent-orange-soft text-accent-orange">
-                <t.icon className="size-5" />
+                <item.icon className="size-5" />
               </span>
-              <h3 className="mt-4 text-base font-bold text-foreground">{t.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{t.text}</p>
+              <h3 className="mt-4 text-base font-bold text-foreground">
+                {t(`home.trust.${item.key}.title`)}
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {t(`home.trust.${item.key}.text`)}
+              </p>
             </div>
           ))}
         </div>
@@ -197,18 +187,17 @@ export function HomePage() {
           <div className="min-w-0">
             <span className="inline-flex items-center gap-2 rounded-full bg-card/10 px-3 py-1 text-xs font-semibold">
               <Briefcase className="size-3.5" />
-              لمقدمي الخدمة
+              {t("home.cta.badge")}
             </span>
             <h2 className="mt-4 text-xl font-extrabold sm:text-2xl">
-              وسّع نشاطك واستقبل طلبات جديدة كل يوم
+              {t("home.cta.title")}
             </h2>
             <p className="mt-2 max-w-2xl text-sm text-brand-foreground/80">
-              انضم إلى آلاف الفنيين والشركات على دليل الخدمات، وحدد مناطق تغطيتك داخل
-              محافظتك أو في جميع أنحاء مصر.
+              {t("home.cta.text")}
             </p>
           </div>
           <Button asChild variant="accent" size="lg">
-            <Link to="/provider-dashboard">انضم كمقدم خدمة</Link>
+            <Link to="/provider-dashboard">{t("nav.joinProvider")}</Link>
           </Button>
         </div>
       </section>

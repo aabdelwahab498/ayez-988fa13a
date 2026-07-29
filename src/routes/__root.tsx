@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { ThemeProvider } from "@/features/theme/ThemeProvider";
+import { I18nProvider, useI18n } from "@/features/i18n/I18nProvider";
 
 function NotFoundComponent() {
   return (
@@ -118,11 +120,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const appearanceScript = `(function(){try{var t=localStorage.getItem('ayez-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}document.documentElement.style.colorScheme=t;var l=localStorage.getItem('ayez-language');if(l==='en'){document.documentElement.lang='en';document.documentElement.dir='ltr';}}catch(e){}})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: appearanceScript }} />
       </head>
       <body>
         {children}
@@ -138,10 +143,19 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-      <Toaster position="top-center" dir="rtl" />
+      <ThemeProvider>
+        <I18nProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+          <AppToaster />
+        </I18nProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
+}
+
+function AppToaster() {
+  const { dir } = useI18n();
+  return <Toaster position="top-center" dir={dir} />;
 }
 

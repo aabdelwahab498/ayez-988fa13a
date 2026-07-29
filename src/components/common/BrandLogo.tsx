@@ -1,5 +1,5 @@
 import logoMark from "@/assets/logo-mark.png.asset.json";
-import { APP_NAME } from "@/core/constants";
+import { useI18n } from "@/features/i18n/I18nProvider";
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
@@ -16,6 +16,7 @@ export function BrandLogo({
   size = "md",
   showText = true,
 }: BrandLogoProps) {
+  const { t } = useI18n();
   const box = size === "sm" ? "size-9" : "size-10";
   const text = size === "sm" ? "text-base" : "text-lg";
   const brandWord = size === "sm" ? "text-[11px]" : "text-xs";
@@ -31,7 +32,7 @@ export function BrandLogo({
         >
           <img
             src={logoMark.url}
-            alt={`شعار ${APP_NAME}`}
+            alt={`${t("app.name")} logo`}
             width={40}
             height={40}
             className="size-full object-contain"
@@ -56,7 +57,7 @@ export function BrandLogo({
             tone === "invert" ? "text-brand-foreground" : "text-foreground",
           )}
         >
-          {APP_NAME}
+          {t("app.name")}
         </span>
       )}
     </span>

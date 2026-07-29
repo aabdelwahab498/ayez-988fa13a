@@ -1,16 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { Home, Search, PlusCircle, ClipboardList, LayoutDashboard } from "lucide-react";
 import { defaultSearch } from "@/features/services/searchSchema";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 const items = [
-  { to: "/", label: "الرئيسية", icon: Home, exact: true },
-  { to: "/services", label: "الخدمات", icon: Search, exact: false },
-  { to: "/request-service", label: "اطلب", icon: PlusCircle, exact: false },
-  { to: "/my-requests", label: "طلباتي", icon: ClipboardList, exact: false },
-  { to: "/provider-dashboard", label: "لوحتي", icon: LayoutDashboard, exact: false },
+  { to: "/", labelKey: "nav.mobile.home" as const, icon: Home, exact: true },
+  { to: "/services", labelKey: "nav.mobile.directory" as const, icon: Search, exact: false },
+  { to: "/request-service", labelKey: "nav.mobile.request" as const, icon: PlusCircle, exact: false },
+  { to: "/my-requests", labelKey: "nav.mobile.myRequests" as const, icon: ClipboardList, exact: false },
+  { to: "/provider-dashboard", labelKey: "nav.mobile.dashboard" as const, icon: LayoutDashboard, exact: false },
 ];
 
 export function MobileBottomNavigation() {
+  const { t } = useI18n();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
       <ul className="grid grid-cols-5">
@@ -25,7 +27,7 @@ export function MobileBottomNavigation() {
               className="flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium"
             >
               <item.icon className="size-5" />
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           </li>
         ))}

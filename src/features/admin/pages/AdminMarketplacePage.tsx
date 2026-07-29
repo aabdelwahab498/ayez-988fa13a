@@ -30,7 +30,7 @@ export function AdminMarketplacePage() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError, isFetching, refetch } = useAdminTaxonomy({
-    search,
+    query: search,
     page,
     pageSize: PAGE_SIZE,
     sector: sector === "all" ? undefined : sector,

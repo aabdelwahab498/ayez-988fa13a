@@ -19,7 +19,7 @@ export function AdminLocationsPage() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError, isFetching, refetch } = useAdminCoverage({
-    search,
+    query: search,
     page,
     pageSize: PAGE_SIZE,
   });

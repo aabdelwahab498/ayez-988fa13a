@@ -29,7 +29,7 @@ export function AdminUsersPage() {
   const [page, setPage] = useState(1);
 
   const query = {
-    search,
+    query: search,
     page,
     pageSize: 8,
     type: type === "all" ? undefined : (type as ManagedUserDTO["type"]),

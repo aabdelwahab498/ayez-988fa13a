@@ -1,7 +1,8 @@
 import type { RequestStatus, SortKey } from "@/core/types";
 
 export const APP_NAME = "دليل الخدمات";
-export const APP_TAGLINE = "أفضل الخدمات بالقرب منك، في دقائق";
+export const APP_TAGLINE = "كل الخدمات والعيادات والمتاجر في مصر… في دليل واحد";
+
 
 export const STATUS_LABELS: Record<RequestStatus, string> = {
   new: "جديد",

@@ -95,7 +95,11 @@ export interface Provider {
   id: ID;
   name: string;
   slug: string;
+  sector: SectorSlug;
+  /** Medical specialty, product line, or professional focus shown on the card. */
+  specialty?: string;
   profileImage: string;
+
   categories: string[];
   services: ProviderService[];
   rating: number;

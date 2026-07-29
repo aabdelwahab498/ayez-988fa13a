@@ -31,7 +31,7 @@ const review = (
   location: string,
 ): Review => ({ id, providerId, authorName, rating, comment, date, location });
 
-export const providers: Provider[] = [
+const serviceProviders: Omit<Provider, "sector">[] = [
   {
     id: "1",
     name: "محمد عبد الرحمن للسباكة",

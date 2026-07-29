@@ -73,6 +73,8 @@ export interface ServiceRequestCreateDTO {
   city?: string;
   area?: string;
   description: string;
+  /** "asap" | "today" | "this_week" | scheduled ISO date. */
+  preferredTime?: string;
   customerName: string;
   customerPhone: string;
 }

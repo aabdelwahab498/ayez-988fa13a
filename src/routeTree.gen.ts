@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RequestServiceRouteImport } from './routes/request-service'
+import { Route as ProviderDashboardRouteImport } from './routes/provider-dashboard'
 import { Route as MyRequestsRouteImport } from './routes/my-requests'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
 
@@ -25,9 +27,19 @@ const RequestServiceRoute = RequestServiceRouteImport.update({
   path: '/request-service',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProviderDashboardRoute = ProviderDashboardRouteImport.update({
+  id: '/provider-dashboard',
+  path: '/provider-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MyRequestsRoute = MyRequestsRouteImport.update({
   id: '/my-requests',
   path: '/my-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,14 +55,18 @@ const ProviderIdRoute = ProviderIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/my-requests': typeof MyRequestsRoute
+  '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
   '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/my-requests': typeof MyRequestsRoute
+  '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -58,7 +74,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/my-requests': typeof MyRequestsRoute
+  '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
   '/provider/$id': typeof ProviderIdRoute
@@ -67,16 +85,27 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/my-requests'
+    | '/provider-dashboard'
     | '/request-service'
     | '/services'
     | '/provider/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/my-requests' | '/request-service' | '/services' | '/provider/$id'
+  to:
+    | '/'
+    | '/admin'
+    | '/my-requests'
+    | '/provider-dashboard'
+    | '/request-service'
+    | '/services'
+    | '/provider/$id'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/my-requests'
+    | '/provider-dashboard'
     | '/request-service'
     | '/services'
     | '/provider/$id'
@@ -84,7 +113,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   MyRequestsRoute: typeof MyRequestsRoute
+  ProviderDashboardRoute: typeof ProviderDashboardRoute
   RequestServiceRoute: typeof RequestServiceRoute
   ServicesRoute: typeof ServicesRoute
   ProviderIdRoute: typeof ProviderIdRoute
@@ -106,11 +137,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RequestServiceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/provider-dashboard': {
+      id: '/provider-dashboard'
+      path: '/provider-dashboard'
+      fullPath: '/provider-dashboard'
+      preLoaderRoute: typeof ProviderDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/my-requests': {
       id: '/my-requests'
       path: '/my-requests'
       fullPath: '/my-requests'
       preLoaderRoute: typeof MyRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -132,7 +177,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   MyRequestsRoute: MyRequestsRoute,
+  ProviderDashboardRoute: ProviderDashboardRoute,
   RequestServiceRoute: RequestServiceRoute,
   ServicesRoute: ServicesRoute,
   ProviderIdRoute: ProviderIdRoute,

@@ -38,4 +38,5 @@ export const PUBLIC_NAV = [
   { to: "/services", labelKey: "nav.directory" },
   { to: "/request-service", labelKey: "nav.request" },
   { to: "/my-requests", labelKey: "nav.myRequests" },
+  { to: "/pricing", labelKey: "nav.pricing" },
 ] as const;

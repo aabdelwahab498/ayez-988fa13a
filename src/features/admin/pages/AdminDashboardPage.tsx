@@ -10,8 +10,6 @@ import {
   YAxis,
 } from "recharts";
 import { AlertTriangle, ArrowLeft, Info, ShieldAlert, TrendingDown, TrendingUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StatsSkeleton } from "@/components/common/Skeletons";
 import { AdminPageHeader, AdminSection } from "../components/AdminPageHeader";
@@ -201,6 +199,3 @@ function RankedList({ title, rows }: { title: string; rows: RankedRowDTO[] }) {
     </AdminSection>
   );
 }
-
-export { RankedList };
-export const AdminDashboardActions = Button;

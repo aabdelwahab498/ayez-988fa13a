@@ -18,14 +18,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { APP_NAME, PUBLIC_NAV } from "@/core/constants";
+import { PUBLIC_NAV } from "@/core/constants";
 import { useI18n } from "@/features/i18n/I18nProvider";
 import { LanguageToggle, ThemeToggle } from "./AppearanceControls";
 import { useMockAuth } from "@/features/auth/useMockAuth";
 
 function BrandMark() {
+  const { t } = useI18n();
   return (
-    <Link to="/" className="flex shrink-0 items-center" aria-label={APP_NAME}>
+    <Link to="/" className="flex shrink-0 items-center" aria-label={t("app.name")}>
       <BrandLogo />
     </Link>
   );
@@ -136,7 +137,7 @@ export function PublicHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
               <SheetHeader>
-                <SheetTitle className="text-right">{APP_NAME}</SheetTitle>
+                <SheetTitle className="text-start">{t("app.name")}</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-1">
                 {[...PUBLIC_NAV, { to: "/provider-dashboard", labelKey: "nav.providerDashboard" as const }, { to: "/admin", labelKey: "nav.adminDashboard" as const }].map(

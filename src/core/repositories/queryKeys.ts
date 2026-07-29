@@ -48,3 +48,21 @@ export const queryKeys = {
     me: () => ["customers", "me"] as const,
   },
 } as const;
+
+/** Admin control-plane cache keys. `adminKeys.all` invalidates the whole plane. */
+export const adminKeys = {
+  all: ["admin"] as const,
+  session: () => ["admin", "session"] as const,
+  executive: () => ["admin", "dashboard", "executive"] as const,
+  team: () => ["admin", "team"] as const,
+  roles: () => ["admin", "roles"] as const,
+  permissions: () => ["admin", "permissions"] as const,
+  users: (query: unknown) => ["admin", "users", query] as const,
+  disputes: () => ["admin", "disputes"] as const,
+  auditLogs: (query: unknown) => ["admin", "audit-logs", query] as const,
+  taxonomy: (query: unknown) => ["admin", "taxonomy", query] as const,
+  coverage: (query: unknown) => ["admin", "coverage", query] as const,
+  settings: () => ["admin", "settings"] as const,
+  integrations: () => ["admin", "integrations"] as const,
+  templates: () => ["admin", "notification-templates"] as const,
+} as const;

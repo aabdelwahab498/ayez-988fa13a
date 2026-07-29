@@ -17,7 +17,22 @@ import { Route as MyRequestsRouteImport } from './routes/my-requests'
 import { Route as JoinProviderRouteImport } from './routes/join-provider'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminTeamRouteImport } from './routes/admin.team'
+import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
+import { Route as AdminProvidersRouteImport } from './routes/admin.providers'
+import { Route as AdminProfileRouteImport } from './routes/admin.profile'
+import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
+import { Route as AdminMarketplaceRouteImport } from './routes/admin.marketplace'
+import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
+import { Route as AdminIntegrationsRouteImport } from './routes/admin.integrations'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminAdvertisingRouteImport } from './routes/admin.advertising'
 
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
@@ -59,45 +74,164 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ProviderIdRoute = ProviderIdRouteImport.update({
   id: '/provider/$id',
   path: '/provider/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTeamRoute = AdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRequestsRoute = AdminRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProvidersRoute = AdminProvidersRouteImport.update({
+  id: '/providers',
+  path: '/providers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProfileRoute = AdminProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketplaceRoute = AdminMarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLocationsRoute = AdminLocationsRouteImport.update({
+  id: '/locations',
+  path: '/locations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminIntegrationsRoute = AdminIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdvertisingRoute = AdminAdvertisingRouteImport.update({
+  id: '/advertising',
+  path: '/advertising',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/join-provider': typeof JoinProviderRoute
   '/my-requests': typeof MyRequestsRoute
   '/pricing': typeof PricingRoute
   '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
+  '/admin/advertising': typeof AdminAdvertisingRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/integrations': typeof AdminIntegrationsRoute
+  '/admin/locations': typeof AdminLocationsRoute
+  '/admin/marketplace': typeof AdminMarketplaceRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/profile': typeof AdminProfileRoute
+  '/admin/providers': typeof AdminProvidersRoute
+  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/team': typeof AdminTeamRoute
+  '/admin/users': typeof AdminUsersRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/join-provider': typeof JoinProviderRoute
   '/my-requests': typeof MyRequestsRoute
   '/pricing': typeof PricingRoute
   '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
+  '/admin/advertising': typeof AdminAdvertisingRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/integrations': typeof AdminIntegrationsRoute
+  '/admin/locations': typeof AdminLocationsRoute
+  '/admin/marketplace': typeof AdminMarketplaceRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/profile': typeof AdminProfileRoute
+  '/admin/providers': typeof AdminProvidersRoute
+  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/team': typeof AdminTeamRoute
+  '/admin/users': typeof AdminUsersRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/join-provider': typeof JoinProviderRoute
   '/my-requests': typeof MyRequestsRoute
   '/pricing': typeof PricingRoute
   '/provider-dashboard': typeof ProviderDashboardRoute
   '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
+  '/admin/advertising': typeof AdminAdvertisingRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/integrations': typeof AdminIntegrationsRoute
+  '/admin/locations': typeof AdminLocationsRoute
+  '/admin/marketplace': typeof AdminMarketplaceRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/profile': typeof AdminProfileRoute
+  '/admin/providers': typeof AdminProvidersRoute
+  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/team': typeof AdminTeamRoute
+  '/admin/users': typeof AdminUsersRoute
   '/provider/$id': typeof ProviderIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,18 +244,47 @@ export interface FileRouteTypes {
     | '/provider-dashboard'
     | '/request-service'
     | '/services'
+    | '/admin/advertising'
+    | '/admin/analytics'
+    | '/admin/audit'
+    | '/admin/integrations'
+    | '/admin/locations'
+    | '/admin/marketplace'
+    | '/admin/notifications'
+    | '/admin/profile'
+    | '/admin/providers'
+    | '/admin/requests'
+    | '/admin/settings'
+    | '/admin/subscriptions'
+    | '/admin/team'
+    | '/admin/users'
     | '/provider/$id'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/join-provider'
     | '/my-requests'
     | '/pricing'
     | '/provider-dashboard'
     | '/request-service'
     | '/services'
+    | '/admin/advertising'
+    | '/admin/analytics'
+    | '/admin/audit'
+    | '/admin/integrations'
+    | '/admin/locations'
+    | '/admin/marketplace'
+    | '/admin/notifications'
+    | '/admin/profile'
+    | '/admin/providers'
+    | '/admin/requests'
+    | '/admin/settings'
+    | '/admin/subscriptions'
+    | '/admin/team'
+    | '/admin/users'
     | '/provider/$id'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -132,12 +295,27 @@ export interface FileRouteTypes {
     | '/provider-dashboard'
     | '/request-service'
     | '/services'
+    | '/admin/advertising'
+    | '/admin/analytics'
+    | '/admin/audit'
+    | '/admin/integrations'
+    | '/admin/locations'
+    | '/admin/marketplace'
+    | '/admin/notifications'
+    | '/admin/profile'
+    | '/admin/providers'
+    | '/admin/requests'
+    | '/admin/settings'
+    | '/admin/subscriptions'
+    | '/admin/team'
+    | '/admin/users'
     | '/provider/$id'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   JoinProviderRoute: typeof JoinProviderRoute
   MyRequestsRoute: typeof MyRequestsRoute
   PricingRoute: typeof PricingRoute
@@ -205,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/provider/$id': {
       id: '/provider/$id'
       path: '/provider/$id'
@@ -212,12 +397,148 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProviderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/team': {
+      id: '/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AdminTeamRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/subscriptions': {
+      id: '/admin/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AdminSubscriptionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/requests': {
+      id: '/admin/requests'
+      path: '/requests'
+      fullPath: '/admin/requests'
+      preLoaderRoute: typeof AdminRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/providers': {
+      id: '/admin/providers'
+      path: '/providers'
+      fullPath: '/admin/providers'
+      preLoaderRoute: typeof AdminProvidersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/profile': {
+      id: '/admin/profile'
+      path: '/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof AdminProfileRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketplace': {
+      id: '/admin/marketplace'
+      path: '/marketplace'
+      fullPath: '/admin/marketplace'
+      preLoaderRoute: typeof AdminMarketplaceRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/locations': {
+      id: '/admin/locations'
+      path: '/locations'
+      fullPath: '/admin/locations'
+      preLoaderRoute: typeof AdminLocationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/integrations': {
+      id: '/admin/integrations'
+      path: '/integrations'
+      fullPath: '/admin/integrations'
+      preLoaderRoute: typeof AdminIntegrationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/advertising': {
+      id: '/admin/advertising'
+      path: '/advertising'
+      fullPath: '/admin/advertising'
+      preLoaderRoute: typeof AdminAdvertisingRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAdvertisingRoute: typeof AdminAdvertisingRoute
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminIntegrationsRoute: typeof AdminIntegrationsRoute
+  AdminLocationsRoute: typeof AdminLocationsRoute
+  AdminMarketplaceRoute: typeof AdminMarketplaceRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminProfileRoute: typeof AdminProfileRoute
+  AdminProvidersRoute: typeof AdminProvidersRoute
+  AdminRequestsRoute: typeof AdminRequestsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
+  AdminTeamRoute: typeof AdminTeamRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdvertisingRoute: AdminAdvertisingRoute,
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminAuditRoute: AdminAuditRoute,
+  AdminIntegrationsRoute: AdminIntegrationsRoute,
+  AdminLocationsRoute: AdminLocationsRoute,
+  AdminMarketplaceRoute: AdminMarketplaceRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminProfileRoute: AdminProfileRoute,
+  AdminProvidersRoute: AdminProvidersRoute,
+  AdminRequestsRoute: AdminRequestsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
+  AdminTeamRoute: AdminTeamRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   JoinProviderRoute: JoinProviderRoute,
   MyRequestsRoute: MyRequestsRoute,
   PricingRoute: PricingRoute,

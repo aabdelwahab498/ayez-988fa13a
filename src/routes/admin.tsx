@@ -1,26 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppShell } from "@/components/layout/AppShell";
-import { AdminPage } from "@/features/admin/AdminPage";
+import { AdminLayout } from "@/features/admin/components/AdminLayout";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "لوحة الإدارة | دليل الخدمات" },
-      {
-        name: "description",
-        content: "إحصائيات المنصة، مراجعة مقدمي الخدمة، ومتابعة الطلبات في جميع المحافظات.",
-      },
-      { property: "og:title", content: "لوحة إدارة دليل الخدمات" },
-      { property: "og:description", content: "متابعة نشاط المنصة والتوثيق والطلبات." },
+      { title: "مركز التحكم | عايز" },
+      { name: "description", content: "لوحة تحكم منصة عايز: المستخدمون، المزودون، الطلبات، الاشتراكات والإعدادات." },
+      { property: "og:title", content: "مركز تحكم عايز" },
+      { property: "og:description", content: "إدارة كاملة لمنصة عايز عبر جميع محافظات مصر." },
+      { name: "robots", content: "noindex" },
     ],
   }),
-  component: AdminRoute,
+  component: AdminLayout,
 });
-
-function AdminRoute() {
-  return (
-    <AppShell>
-      <AdminPage />
-    </AppShell>
-  );
-}

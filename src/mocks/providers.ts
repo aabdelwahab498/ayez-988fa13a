@@ -438,4 +438,18 @@ const serviceProviders: Omit<Provider, "sector">[] = [
   },
 ];
 
+/** Home-service providers keep their sector derived from their category. */
+const servicesWithSector: Provider[] = serviceProviders.map((p) => ({
+  ...p,
+  sector: "services" as const,
+  specialty: p.categories
+    .map((slug) => categoryBySlug(slug)?.name)
+    .filter(Boolean)
+    .join(" • "),
+}));
+
+/** Full directory across every sector the platform covers. */
+export const providers: Provider[] = [...servicesWithSector, ...directoryListings];
+
 export const providerById = (id?: string) => providers.find((p) => p.id === id);
+

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { GovernorateSelector } from "./GovernorateSelector";
 import { CityAreaSelector } from "./CityAreaSelector";
 import type { EgyptLocation } from "@/core/types";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 interface Props {
   value: EgyptLocation;
@@ -19,6 +20,7 @@ export function EgyptLocationSelector({
   showArea = true,
   showCurrentLocation = true,
 }: Props) {
+  const { t } = useI18n();
   return (
     <div className="space-y-3">
       <GovernorateSelector
@@ -42,13 +44,13 @@ export function EgyptLocationSelector({
           size="sm"
           className="text-brand"
           onClick={() =>
-            toast.info("تحديد الموقع الحالي غير مفعّل في النسخة التجريبية", {
-              description: "سيتم ربطه لاحقًا بخدمة تحديد المواقع.",
+            toast.info(t("dir.geoDisabledTitle"), {
+              description: t("dir.geoDisabledDesc"),
             })
           }
         >
           <LocateFixed className="size-4" />
-          استخدم موقعي الحالي
+          {t("dir.useCurrentLocation")}
         </Button>
       )}
     </div>

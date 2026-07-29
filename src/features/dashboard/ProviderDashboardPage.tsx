@@ -11,8 +11,10 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { customerRequests } from "@/mocks/requests";
 import { providerById } from "@/mocks/providers";
 import { formatArabicDate, formatEGP } from "@/core/utils";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function ProviderDashboardPage() {
+  const { t, td, n } = useI18n();
   const provider = providerById("3")!;
   const incoming = customerRequests.filter((r) => r.status !== "cancelled");
 
@@ -22,38 +24,38 @@ export function ProviderDashboardPage() {
         <div className="flex min-w-0 items-center gap-3">
           <img
             src={provider.profileImage}
-            alt={`صورة ${provider.name}`}
+            alt={t("dash.provider.image.alt", { name: td(provider.name) })}
             className="size-12 shrink-0 rounded-xl object-cover"
           />
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-extrabold text-foreground">{provider.name}</h1>
-            <p className="text-sm text-muted-foreground">لوحة تحكم مقدم الخدمة</p>
+            <h1 className="truncate text-xl font-extrabold text-foreground">{td(provider.name)}</h1>
+            <p className="text-sm text-muted-foreground">{t("dash.provider.title")}</p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Switch id="available" defaultChecked={provider.availableNow} />
           <Label htmlFor="available" className="text-sm">
-            متاح الآن
+            {t("dash.provider.availableNow")}
           </Label>
         </div>
       </header>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <DashboardStatCard label="طلبات جديدة" value={7} icon={Inbox} tone="orange" />
+        <DashboardStatCard label={t("dash.provider.stat.newRequests")} value={7} icon={Inbox} tone="orange" />
         <DashboardStatCard
-          label="خدمات منفذة"
+          label={t("dash.provider.stat.completedJobs")}
           value={provider.completedJobs}
           icon={CheckCircle2}
           tone="success"
         />
         <DashboardStatCard
-          label="متوسط التقييم"
+          label={t("dash.provider.stat.avgRating")}
           value={provider.rating.toFixed(1)}
           icon={Star}
-          hint={`${provider.reviewsCount.toLocaleString("ar-EG")} تقييم`}
+          hint={t("dash.provider.stat.reviewsHint", { count: n(provider.reviewsCount) })}
         />
         <DashboardStatCard
-          label="دخل الشهر"
+          label={t("dash.provider.stat.monthlyIncome")}
           value={formatEGP(48750)}
           icon={Wallet}
           tone="muted"
@@ -62,10 +64,10 @@ export function ProviderDashboardPage() {
 
       <Tabs defaultValue="requests" className="mt-8">
         <TabsList className="flex w-full flex-wrap justify-start gap-1">
-          <TabsTrigger value="requests">الطلبات الواردة</TabsTrigger>
-          <TabsTrigger value="services">خدماتي وأسعاري</TabsTrigger>
-          <TabsTrigger value="coverage">مناطق التغطية</TabsTrigger>
-          <TabsTrigger value="reviews">التقييمات</TabsTrigger>
+          <TabsTrigger value="requests">{t("dash.provider.tab.requests")}</TabsTrigger>
+          <TabsTrigger value="services">{t("dash.provider.tab.services")}</TabsTrigger>
+          <TabsTrigger value="coverage">{t("dash.provider.tab.coverage")}</TabsTrigger>
+          <TabsTrigger value="reviews">{t("dash.provider.tab.reviews")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="requests" className="mt-5 space-y-3">
@@ -75,7 +77,7 @@ export function ProviderDashboardPage() {
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                   <div className="min-w-0">
                     <h3 className="truncate font-bold text-foreground">
-                      {r.categoryName} — {r.customerName}
+                      {td(r.categoryName)} — {td(r.customerName)}
                     </h3>
                     <p className="text-xs text-muted-foreground">
                       {r.reference} • {formatArabicDate(r.createdAt)}
@@ -83,11 +85,11 @@ export function ProviderDashboardPage() {
                   </div>
                   <StatusBadge status={r.status} />
                 </div>
-                <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{r.description}</p>
+                <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{td(r.description)}</p>
                 <div className="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1.5">
                     <MapPin className="size-3.5" />
-                    {r.locationLabel}
+                    {td(r.locationLabel)}
                   </span>
                   <span className="flex items-center gap-1.5" dir="ltr">
                     <Phone className="size-3.5" />
@@ -96,16 +98,19 @@ export function ProviderDashboardPage() {
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-3">
                   <Button size="sm" variant="brand">
-                    قبول الطلب
+                    {t("dash.provider.requests.accept")}
                   </Button>
                   <Button size="sm" variant="outline">
-                    طلب تفاصيل إضافية
+                    {t("dash.provider.requests.moreDetails")}
                   </Button>
                 </div>
               </article>
             ))
           ) : (
-            <EmptyState title="لا توجد طلبات واردة" description="ستظهر الطلبات الجديدة هنا." />
+            <EmptyState
+              title={t("dash.provider.requests.empty.title")}
+              description={t("dash.provider.requests.empty.desc")}
+            />
           )}
         </TabsContent>
 
@@ -114,32 +119,35 @@ export function ProviderDashboardPage() {
             {provider.services.map((s) => (
               <div key={s.id} className="card-surface flex items-center justify-between gap-4 p-4">
                 <div className="min-w-0">
-                  <p className="truncate font-bold text-foreground">{s.name}</p>
-                  <p className="text-xs text-muted-foreground">{s.unit}</p>
+                  <p className="truncate font-bold text-foreground">{td(s.name)}</p>
+                  <p className="text-xs text-muted-foreground">{td(s.unit)}</p>
                 </div>
                 <p className="shrink-0 text-sm font-bold text-brand">
                   {s.priceTo
-                    ? `${formatEGP(s.priceFrom)} - ${formatEGP(s.priceTo)}`
-                    : `من ${formatEGP(s.priceFrom)}`}
+                    ? t("dash.provider.services.priceRange", {
+                        from: formatEGP(s.priceFrom),
+                        to: formatEGP(s.priceTo),
+                      })
+                    : t("dash.provider.services.priceFrom", { price: formatEGP(s.priceFrom) })}
                 </p>
               </div>
             ))}
           </div>
           <Button className="mt-4" variant="soft">
-            إضافة خدمة جديدة
+            {t("dash.provider.services.addNew")}
           </Button>
         </TabsContent>
 
         <TabsContent value="coverage" className="mt-5">
           <div className="card-surface p-5">
-            <h2 className="text-base font-bold text-foreground">المناطق التي تخدمها</h2>
+            <h2 className="text-base font-bold text-foreground">{t("dash.provider.coverage.title")}</h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {provider.coverage.map((c) => (
                 <ServiceCoverageBadge key={c.label} coverage={c} />
               ))}
             </div>
             <Button className="mt-5" variant="soft">
-              تعديل مناطق التغطية
+              {t("dash.provider.coverage.edit")}
             </Button>
           </div>
         </TabsContent>
@@ -149,29 +157,27 @@ export function ProviderDashboardPage() {
             <div key={r.id} className="card-surface p-4">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-bold text-foreground">{r.authorName}</p>
+                  <p className="truncate font-bold text-foreground">{td(r.authorName)}</p>
                   <p className="text-xs text-muted-foreground">
-                    {r.location} • {formatArabicDate(r.date)}
+                    {td(r.location)} • {formatArabicDate(r.date)}
                   </p>
                 </div>
                 <span className="shrink-0 text-sm font-bold text-accent-orange">
                   {r.rating.toFixed(1)} ★
                 </span>
               </div>
-              <p className="mt-3 text-sm text-muted-foreground">{r.comment}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{td(r.comment)}</p>
             </div>
           ))}
         </TabsContent>
       </Tabs>
 
       <div className="mt-8 rounded-2xl bg-brand p-6 text-brand-foreground">
-        <h2 className="text-lg font-extrabold">اجعل ملفك أكثر جذبًا للعملاء</h2>
-        <p className="mt-1.5 text-sm text-brand-foreground/80">
-          أضف صور أعمال سابقة ووثّق حسابك لزيادة فرص ظهورك في نتائج البحث.
-        </p>
+        <h2 className="text-lg font-extrabold">{t("dash.provider.cta.title")}</h2>
+        <p className="mt-1.5 text-sm text-brand-foreground/80">{t("dash.provider.cta.text")}</p>
         <Button asChild className="mt-4" variant="accent">
           <Link to="/provider/$id" params={{ id: provider.id }}>
-            عرض ملفي العام
+            {t("dash.provider.cta.viewProfile")}
           </Link>
         </Button>
       </div>

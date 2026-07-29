@@ -8,6 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import { translations, type Language, type TranslationKey } from "./translations";
+import { dataDictionary } from "./dataDictionary";
+import { setUtilLanguage } from "@/core/utils/locale";
 
 const STORAGE_KEY = "ayez-language";
 
@@ -16,7 +18,13 @@ interface I18nContextValue {
   dir: "rtl" | "ltr";
   setLang: (lang: Language) => void;
   toggleLang: () => void;
-  t: (key: TranslationKey) => string;
+  /** UI string by key, with optional {placeholders} */
+  t: (key: TranslationKey, vars?: Record<string, string | number>) => string;
+  /** Translate a mock-data Arabic string (category, city, provider name...) */
+  td: (text?: string | null) => string;
+  /** Locale aware number formatting */
+  n: (value: number) => string;
+  locale: string;
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null);
@@ -41,13 +49,29 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<I18nContextValue>(() => {
+    setUtilLanguage(lang);
     const dict = translations[lang];
+    const locale = lang === "ar" ? "ar-EG" : "en-US";
     return {
       lang,
+      locale,
       dir: lang === "ar" ? "rtl" : "ltr",
       setLang,
       toggleLang: () => setLang(lang === "ar" ? "en" : "ar"),
-      t: (key: TranslationKey) => dict[key] ?? translations.ar[key] ?? key,
+      t: (key: TranslationKey, vars?: Record<string, string | number>) => {
+        const raw = dict[key] ?? translations.ar[key] ?? key;
+        if (!vars) return raw;
+        return Object.entries(vars).reduce(
+          (acc, [k, v]) => acc.replaceAll(`{${k}}`, String(v)),
+          raw,
+        );
+      },
+      td: (text?: string | null) => {
+        if (!text) return "";
+        if (lang === "ar") return text;
+        return dataDictionary[text.trim()] ?? text;
+      },
+      n: (value: number) => value.toLocaleString(locale),
     };
   }, [lang, setLang]);
 

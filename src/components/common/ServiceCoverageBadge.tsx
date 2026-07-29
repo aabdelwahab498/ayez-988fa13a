@@ -1,6 +1,7 @@
 import { MapPin, Globe2 } from "lucide-react";
 import type { ServiceCoverage } from "@/core/types";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function ServiceCoverageBadge({
   coverage,
@@ -9,8 +10,16 @@ export function ServiceCoverageBadge({
   coverage: ServiceCoverage;
   className?: string;
 }) {
+  const { lang, td } = useI18n();
   const nationwide = coverage.scope === "nationwide";
   const Icon = nationwide ? Globe2 : MapPin;
+
+  const label =
+    lang === "ar"
+      ? coverage.label
+      : coverage.label.startsWith("يخدم:")
+        ? `Serves: ${td(coverage.label.replace("يخدم:", "").trim())}`
+        : td(coverage.label);
 
   return (
     <span
@@ -23,7 +32,7 @@ export function ServiceCoverageBadge({
       )}
     >
       <Icon className="size-3.5 shrink-0" />
-      <span className="truncate">{coverage.label}</span>
+      <span className="truncate">{label}</span>
     </span>
   );
 }

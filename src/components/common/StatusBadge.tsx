@@ -1,6 +1,7 @@
 import type { RequestStatus } from "@/core/types";
 import { STATUS_LABELS } from "@/core/constants";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 const styles: Record<RequestStatus, string> = {
   new: "bg-accent-orange-soft text-accent-orange border-accent-orange/25",
@@ -16,6 +17,7 @@ export function StatusBadge({
   status: RequestStatus;
   className?: string;
 }) {
+  const { td } = useI18n();
   return (
     <span
       className={cn(
@@ -24,7 +26,7 @@ export function StatusBadge({
         className,
       )}
     >
-      {STATUS_LABELS[status]}
+      {td(STATUS_LABELS[status])}
     </span>
   );
 }

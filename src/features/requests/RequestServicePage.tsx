@@ -21,12 +21,22 @@ import { providerById } from "@/mocks/providers";
 import { locationLabel } from "@/core/utils";
 import type { EgyptLocation } from "@/core/types";
 import { defaultSearch } from "@/features/services/searchSchema";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 const routeApi = getRouteApi("/request-service");
 
 export function RequestServicePage() {
+  const { t, td } = useI18n();
   const { provider: providerId, category: presetCategory } = routeApi.useSearch();
   const provider = providerById(providerId);
+
+  const stepLabels = [
+    t("req.step.service"),
+    t("req.step.location"),
+    t("req.step.details"),
+    t("req.step.contact"),
+    t("req.step.confirm"),
+  ];
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -46,7 +56,7 @@ export function RequestServicePage() {
 
   const next = () => {
     if (!canContinue) {
-      toast.error("من فضلك أكمل بيانات هذه الخطوة قبل المتابعة");
+      toast.error(t("req.toast.incomplete"));
       return;
     }
     setStep((s) => Math.min(s + 1, REQUEST_STEPS.length - 1));
@@ -54,7 +64,7 @@ export function RequestServicePage() {
 
   const submit = () => {
     setSubmitted(true);
-    toast.success("تم إرسال طلبك بنجاح");
+    toast.success(t("req.toast.success"));
   };
 
   if (submitted) {
@@ -63,18 +73,17 @@ export function RequestServicePage() {
         <span className="mx-auto grid size-16 place-items-center rounded-full bg-success-soft text-success">
           <CheckCircle2 className="size-8" />
         </span>
-        <h1 className="mt-5 text-2xl font-extrabold text-foreground">تم إرسال طلبك بنجاح</h1>
+        <h1 className="mt-5 text-2xl font-extrabold text-foreground">{t("req.success.title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          رقم الطلب <span className="font-bold text-foreground">REQ-10312</span> — سيتواصل معك
-          مقدم الخدمة خلال وقت قصير على الرقم {phone}.
+          {t("req.success.body", { ref: "REQ-10312", phone })}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Button asChild variant="brand">
-            <Link to="/my-requests">متابعة طلباتي</Link>
+            <Link to="/my-requests">{t("req.success.myRequests")}</Link>
           </Button>
           <Button asChild variant="soft">
             <Link to="/services" search={defaultSearch}>
-              تصفح مقدمي الخدمة
+              {t("req.success.browse")}
             </Link>
           </Button>
         </div>
@@ -84,19 +93,19 @@ export function RequestServicePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 lg:px-8 lg:py-12">
-      <h1 className="text-xl font-extrabold text-foreground sm:text-2xl">اطلب خدمة</h1>
+      <h1 className="text-xl font-extrabold text-foreground sm:text-2xl">{t("req.request.title")}</h1>
       <p className="mt-1.5 text-sm text-muted-foreground">
         {provider
-          ? `طلب موجّه إلى ${provider.name}`
-          : "أكمل الخطوات وسنوصل طلبك لمقدمي الخدمة المناسبين في منطقتك"}
+          ? t("req.request.subtitle.forProvider", { name: td(provider.name) })
+          : t("req.request.subtitle.default")}
       </p>
 
-      <RequestStepper steps={REQUEST_STEPS} current={step} className="mt-6" />
+      <RequestStepper steps={stepLabels} current={step} className="mt-6" />
 
       <div className="card-surface mt-6 p-5 sm:p-6">
         {step === 0 && (
           <div className="space-y-3">
-            <Label>نوع الخدمة</Label>
+            <Label>{t("req.form.serviceType")}</Label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {categories.map((c) => (
                 <button
@@ -109,7 +118,7 @@ export function RequestServicePage() {
                       : "border-border bg-card text-foreground hover:border-brand/40"
                   }`}
                 >
-                  {c.name}
+                  {td(c.name)}
                 </button>
               ))}
             </div>
@@ -118,7 +127,7 @@ export function RequestServicePage() {
 
         {step === 1 && (
           <div className="space-y-3">
-            <Label>موقع تنفيذ الخدمة</Label>
+            <Label>{t("req.form.location")}</Label>
             <EgyptLocationSelector value={location} onChange={setLocation} />
           </div>
         )}
@@ -126,27 +135,27 @@ export function RequestServicePage() {
         {step === 2 && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="desc">اشرح المشكلة أو الخدمة المطلوبة</Label>
+              <Label htmlFor="desc">{t("req.form.descLabel")}</Label>
               <Textarea
                 id="desc"
                 rows={5}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="مثال: تسريب مياه أسفل حوض المطبخ منذ يومين ويحتاج كشف وإصلاح."
+                placeholder={t("req.form.descPlaceholder")}
               />
-              <p className="text-xs text-muted-foreground">10 أحرف على الأقل</p>
+              <p className="text-xs text-muted-foreground">{t("req.form.descHint")}</p>
             </div>
             <div className="space-y-2">
-              <Label>الوقت المفضل</Label>
+              <Label>{t("req.form.timeLabel")}</Label>
               <Select value={preferredTime} onValueChange={setPreferredTime}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="asap">في أقرب وقت</SelectItem>
-                  <SelectItem value="morning">صباحًا (٩ص - ١٢م)</SelectItem>
-                  <SelectItem value="afternoon">ظهرًا (١٢م - ٥م)</SelectItem>
-                  <SelectItem value="evening">مساءً (٥م - ٩م)</SelectItem>
+                  <SelectItem value="asap">{t("req.time.asap")}</SelectItem>
+                  <SelectItem value="morning">{t("req.time.morning")}</SelectItem>
+                  <SelectItem value="afternoon">{t("req.time.afternoon")}</SelectItem>
+                  <SelectItem value="evening">{t("req.time.evening")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -156,18 +165,23 @@ export function RequestServicePage() {
         {step === 3 && (
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="name">الاسم بالكامل</Label>
-              <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="أحمد سمير" />
+              <Label htmlFor="name">{t("req.form.nameLabel")}</Label>
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={t("req.form.namePlaceholder")}
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">رقم الهاتف</Label>
+              <Label htmlFor="phone">{t("req.form.phoneLabel")}</Label>
               <Input
                 id="phone"
                 inputMode="tel"
                 dir="ltr"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="0100 123 4567"
+                placeholder={t("req.form.phonePlaceholder")}
               />
             </div>
           </div>
@@ -176,12 +190,15 @@ export function RequestServicePage() {
         {step === 4 && (
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
             {[
-              ["الخدمة", categoryBySlug(category)?.name ?? "-"],
-              ["الموقع", locationLabel(location)],
-              ["الوقت المفضل", preferredTime === "asap" ? "في أقرب وقت" : "موعد محدد"],
-              ["الاسم", name],
-              ["الهاتف", phone],
-              ["مقدم الخدمة", provider?.name ?? "سيتم ترشيح الأنسب"],
+              [t("req.summary.service"), td(categoryBySlug(category)?.name) || "-"],
+              [t("req.summary.location"), locationLabel(location)],
+              [
+                t("req.summary.time"),
+                preferredTime === "asap" ? t("req.summary.timeAsap") : t("req.summary.timeScheduled"),
+              ],
+              [t("req.summary.name"), name],
+              [t("req.summary.phone"), phone],
+              [t("req.summary.provider"), provider ? td(provider.name) : t("req.summary.providerTbd")],
             ].map(([k, v]) => (
               <div key={k} className="rounded-lg border border-border p-3">
                 <dt className="text-xs text-muted-foreground">{k}</dt>
@@ -189,7 +206,7 @@ export function RequestServicePage() {
               </div>
             ))}
             <div className="rounded-lg border border-border p-3 sm:col-span-2">
-              <dt className="text-xs text-muted-foreground">الوصف</dt>
+              <dt className="text-xs text-muted-foreground">{t("req.summary.description")}</dt>
               <dd className="mt-0.5 text-foreground">{description}</dd>
             </div>
           </dl>
@@ -202,16 +219,16 @@ export function RequestServicePage() {
             disabled={step === 0}
           >
             <ArrowRight className="size-4" />
-            السابق
+            {t("req.nav.prev")}
           </Button>
           {step < REQUEST_STEPS.length - 1 ? (
             <Button variant="brand" onClick={next}>
-              التالي
+              {t("req.nav.next")}
               <ArrowLeft className="size-4" />
             </Button>
           ) : (
             <Button variant="accent" onClick={submit}>
-              تأكيد وإرسال الطلب
+              {t("req.nav.submit")}
             </Button>
           )}
         </div>

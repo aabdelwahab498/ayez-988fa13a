@@ -17,6 +17,7 @@ import { sectors, sectorBySlug } from "@/mocks/sectors";
 import { RATING_OPTIONS } from "@/core/constants";
 import { formatEGP } from "@/core/utils";
 import type { ServicesSearch } from "@/features/services/searchSchema";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 interface FilterPanelProps {
   filters: ServicesSearch;
@@ -25,20 +26,21 @@ interface FilterPanelProps {
 }
 
 export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
+  const { t, td, dir } = useI18n();
   const sectorCategories = categoriesBySector(filters.sector || undefined);
-  const categoryLabel = sectorBySlug(filters.sector)?.searchLabel ?? "التصنيف";
+  const categoryLabel = td(sectorBySlug(filters.sector)?.searchLabel) || t("dir.category");
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-foreground">تصفية النتائج</h2>
+        <h2 className="text-base font-bold text-foreground">{t("dir.filterResults")}</h2>
         <Button variant="ghost" size="sm" className="text-brand" onClick={onClear}>
-          مسح الكل
+          {t("dir.clearAll")}
         </Button>
       </div>
 
       <div className="space-y-2">
-        <Label>القطاع</Label>
+        <Label>{t("dir.sector")}</Label>
         <Select
           value={filters.sector || ALL_VALUE}
           onValueChange={(v) =>
@@ -46,13 +48,13 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="كل القطاعات" />
+            <SelectValue placeholder={t("dir.allSectors")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>كل القطاعات</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("dir.allSectors")}</SelectItem>
             {sectors.map((s) => (
               <SelectItem key={s.slug} value={s.slug}>
-                {s.name}
+                {td(s.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -66,13 +68,13 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
           onValueChange={(v) => onChange({ category: v === ALL_VALUE ? "" : v })}
         >
           <SelectTrigger>
-            <SelectValue placeholder="كل التصنيفات" />
+            <SelectValue placeholder={t("dir.allCategories")} />
           </SelectTrigger>
           <SelectContent className="max-h-72">
-            <SelectItem value={ALL_VALUE}>كل التصنيفات</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("dir.allCategories")}</SelectItem>
             {sectorCategories.map((c) => (
               <SelectItem key={c.slug} value={c.slug}>
-                {c.name}
+                {td(c.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -83,7 +85,7 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
 
 
       <div className="space-y-2">
-        <Label>المحافظة</Label>
+        <Label>{t("dir.governorate")}</Label>
         <GovernorateSelector
           value={filters.governorate || undefined}
           onChange={(v) => onChange({ governorate: v ?? "", city: "", area: "" })}
@@ -100,7 +102,7 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
       <Separator />
 
       <div className="space-y-2">
-        <Label>التقييم</Label>
+        <Label>{t("dir.rating")}</Label>
         <Select
           value={String(filters.rating)}
           onValueChange={(v) => onChange({ rating: Number(v) })}
@@ -111,7 +113,7 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
           <SelectContent>
             {RATING_OPTIONS.map((o) => (
               <SelectItem key={o.value} value={String(o.value)}>
-                {o.label}
+                {td(o.label)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -122,13 +124,13 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
 
       <div className="space-y-3">
         <Label>
-          الحد الأقصى لسعر البداية:{" "}
+          {t("dir.maxPrice")}{" "}
           <span className="font-bold text-foreground">
-            {filters.maxPrice ? formatEGP(filters.maxPrice) : "بدون حد"}
+            {filters.maxPrice ? formatEGP(filters.maxPrice) : t("dir.noLimit")}
           </span>
         </Label>
         <Slider
-          dir="rtl"
+          dir={dir}
           value={[filters.maxPrice || 5000]}
           min={100}
           max={5000}
@@ -147,7 +149,7 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
             onCheckedChange={(c) => onChange({ verified: Boolean(c) })}
           />
           <Label htmlFor="verified" className="cursor-pointer font-normal">
-            مقدمو خدمة موثقون فقط
+            {t("dir.verifiedOnly")}
           </Label>
         </div>
         <div className="flex items-center gap-2">
@@ -157,7 +159,7 @@ export function FilterPanel({ filters, onChange, onClear }: FilterPanelProps) {
             onCheckedChange={(c) => onChange({ available: Boolean(c) })}
           />
           <Label htmlFor="available" className="cursor-pointer font-normal">
-            متاح الآن
+            {t("dir.availableNow")}
           </Label>
         </div>
       </div>

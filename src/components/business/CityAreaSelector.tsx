@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/select";
 import { governorates } from "@/mocks/locations";
 import { ALL_VALUE } from "./GovernorateSelector";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function CityAreaSelector({
   governorate,
@@ -25,6 +26,7 @@ export function CityAreaSelector({
   showArea?: boolean;
   className?: string;
 }) {
+  const { t, td } = useI18n();
   const gov = governorates.find((g) => g.slug === governorate);
   const cities = gov?.cities ?? [];
   const areas = cities.find((c) => c.slug === city)?.areas ?? [];
@@ -37,14 +39,16 @@ export function CityAreaSelector({
           onValueChange={(v) => onCityChange(v === ALL_VALUE ? undefined : v)}
           disabled={!gov}
         >
-          <SelectTrigger aria-label="اختر المدينة">
-            <SelectValue placeholder={gov ? "كل المدن" : "اختر المحافظة أولًا"} />
+          <SelectTrigger aria-label={t("dir.selectCity")}>
+            <SelectValue
+              placeholder={gov ? t("dir.allCities") : t("dir.chooseGovernorateFirst")}
+            />
           </SelectTrigger>
           <SelectContent className="max-h-72">
-            <SelectItem value={ALL_VALUE}>كل المدن</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("dir.allCities")}</SelectItem>
             {cities.map((c) => (
               <SelectItem key={c.slug} value={c.slug}>
-                {c.name}
+                {td(c.name)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -56,14 +60,16 @@ export function CityAreaSelector({
             onValueChange={(v) => onAreaChange(v === ALL_VALUE ? undefined : v)}
             disabled={!areas.length}
           >
-            <SelectTrigger aria-label="اختر المنطقة">
-              <SelectValue placeholder={areas.length ? "كل المناطق" : "المنطقة (اختياري)"} />
+            <SelectTrigger aria-label={t("dir.selectArea")}>
+              <SelectValue
+                placeholder={areas.length ? t("dir.allAreas") : t("dir.areaOptional")}
+              />
             </SelectTrigger>
             <SelectContent className="max-h-72">
-              <SelectItem value={ALL_VALUE}>كل المناطق</SelectItem>
+              <SelectItem value={ALL_VALUE}>{t("dir.allAreas")}</SelectItem>
               {areas.map((a) => (
                 <SelectItem key={a.slug} value={a.slug}>
-                  {a.name}
+                  {td(a.name)}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -2,8 +2,10 @@ import { Link } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import type { Category } from "@/core/types";
 import { defaultSearch } from "@/features/services/searchSchema";
+import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function CategoryCard({ category }: { category: Category }) {
+  const { t, td, n } = useI18n();
   const Icon = (Icons[category.icon as keyof typeof Icons] ??
     Icons.Wrench) as Icons.LucideIcon;
 
@@ -16,9 +18,9 @@ export function CategoryCard({ category }: { category: Category }) {
       <span className="grid size-12 place-items-center rounded-xl bg-brand-soft text-brand transition-colors group-hover:bg-accent-orange-soft group-hover:text-accent-orange">
         <Icon className="size-6" />
       </span>
-      <span className="font-bold text-foreground">{category.name}</span>
+      <span className="font-bold text-foreground">{td(category.name)}</span>
       <span className="text-xs text-muted-foreground">
-        {category.providersCount.toLocaleString("ar-EG")} مقدم خدمة
+        {t("dir.category.providersCount", { count: n(category.providersCount) })}
       </span>
     </Link>
   );

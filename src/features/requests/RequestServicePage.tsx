@@ -63,9 +63,30 @@ export function RequestServicePage() {
     setStep((s) => Math.min(s + 1, REQUEST_STEPS.length - 1));
   };
 
+  const [reference, setReference] = useState("");
+
   const submit = () => {
-    setSubmitted(true);
-    toast.success(t("req.toast.success"));
+    createRequest.mutate(
+      {
+        categorySlug: category,
+        governorate: location.governorate,
+        city: location.city,
+        area: location.area,
+        description,
+        preferredTime,
+        customerName: name,
+        customerPhone: phone,
+        providerId: providerId || undefined,
+      },
+      {
+        onSuccess: (res) => {
+          setReference(res.reference);
+          setSubmitted(true);
+          toast.success(t("req.toast.success"));
+        },
+        onError: () => toast.error(t("req.toast.incomplete")),
+      },
+    );
   };
 
   if (submitted) {
@@ -76,7 +97,7 @@ export function RequestServicePage() {
         </span>
         <h1 className="mt-5 text-2xl font-extrabold text-foreground">{t("req.success.title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {t("req.success.body", { ref: "REQ-10312", phone })}
+          {t("req.success.body", { ref: reference, phone })}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Button asChild variant="brand">
@@ -228,7 +249,7 @@ export function RequestServicePage() {
               <ArrowLeft className="size-4" />
             </Button>
           ) : (
-            <Button variant="accent" onClick={submit}>
+            <Button variant="accent" onClick={submit} disabled={createRequest.isPending}>
               {t("req.nav.submit")}
             </Button>
           )}

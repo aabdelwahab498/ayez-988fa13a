@@ -8,15 +8,27 @@ import { DashboardStatCard } from "@/components/common/DashboardStatCard";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { ServiceCoverageBadge } from "@/components/common/ServiceCoverageBadge";
 import { EmptyState } from "@/components/common/EmptyState";
-import { customerRequests } from "@/mocks/requests";
-import { providerById } from "@/mocks/providers";
+import { QueryBoundary } from "@/components/common/QueryBoundary";
+import { ListSkeleton, ProfileSkeleton } from "@/components/common/Skeletons";
+import { useProvider, useProviderOverview } from "@/core/hooks/queries";
 import { formatArabicDate, formatEGP } from "@/core/utils";
 import { useI18n } from "@/features/i18n/I18nProvider";
 
 export function ProviderDashboardPage() {
   const { t, td, n } = useI18n();
-  const provider = providerById("3")!;
-  const incoming = customerRequests.filter((r) => r.status !== "cancelled");
+  /** Session provider id — replaced by the authenticated user id later. */
+  const providerId = "3";
+  const { data: provider, isPending } = useProvider(providerId);
+  const overview = useProviderOverview(providerId);
+  const incoming = (overview.data?.leads ?? []).filter((r) => r.status !== "cancelled");
+
+  if (isPending || !provider) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-10 lg:px-8">
+        <ProfileSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 lg:px-8 lg:py-12">
@@ -71,8 +83,16 @@ export function ProviderDashboardPage() {
         </TabsList>
 
         <TabsContent value="requests" className="mt-5 space-y-3">
-          {incoming.length ? (
-            incoming.map((r) => (
+          <QueryBoundary
+            isLoading={overview.isPending}
+            isError={overview.isError}
+            isEmpty={incoming.length === 0}
+            onRetry={() => overview.refetch()}
+            skeleton={<ListSkeleton count={3} />}
+            emptyTitle={t("dash.provider.requests.empty.title")}
+            emptyDescription={t("dash.provider.requests.empty.desc")}
+          >
+            {incoming.map((r) => (
               <article key={r.id} className="card-surface p-4 sm:p-5">
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                   <div className="min-w-0">
@@ -105,13 +125,8 @@ export function ProviderDashboardPage() {
                   </Button>
                 </div>
               </article>
-            ))
-          ) : (
-            <EmptyState
-              title={t("dash.provider.requests.empty.title")}
-              description={t("dash.provider.requests.empty.desc")}
-            />
-          )}
+            ))}
+          </QueryBoundary>
         </TabsContent>
 
         <TabsContent value="services" className="mt-5">

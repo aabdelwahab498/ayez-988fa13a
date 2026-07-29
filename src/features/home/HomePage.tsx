@@ -9,7 +9,7 @@ import {
   Send,
   Briefcase,
 } from "lucide-react";
-import heroImage from "@/assets/hero-technician.jpg";
+import heroImage from "@/assets/hero-directory-team.jpg";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { SearchBarWidget } from "@/components/business/SearchBarWidget";
@@ -103,9 +103,9 @@ export function HomePage() {
           <div className="relative">
             <img
               src={heroImage}
-              alt="فني خدمات مصري محترف داخل شقة سكنية"
+              alt="طبيبة وفني صيانة ومهندس مصريون يمثلون قطاعات الدليل"
               width={1200}
-              height={1008}
+              height={912}
               className="h-64 w-full rounded-2xl object-cover shadow-elevated sm:h-80 lg:h-[26rem]"
             />
           </div>

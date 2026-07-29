@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { GovernorateSelector, ALL_VALUE } from "./GovernorateSelector";
 import { governorates } from "@/mocks/locations";
-import { categoriesBySector } from "@/mocks/categories";
+import { categoriesBySector, categoryBySlug } from "@/mocks/categories";
 import { sectors, sectorBySlug } from "@/mocks/sectors";
 import { defaultSearch } from "@/features/services/searchSchema";
 
@@ -71,7 +71,7 @@ export function SearchBarWidget({
           }}
         >
           <SelectTrigger className="h-12" aria-label="القطاع">
-            <SelectValue placeholder="كل القطاعات" />
+            <SelectValue>{sector ? sectorBySlug(sector)?.name : "كل القطاعات"}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL_VALUE}>كل القطاعات</SelectItem>
@@ -88,7 +88,7 @@ export function SearchBarWidget({
           onValueChange={(v) => setCategory(v === ALL_VALUE ? undefined : v)}
         >
           <SelectTrigger className="h-12" aria-label={categoryLabel}>
-            <SelectValue placeholder={categoryLabel} />
+            <SelectValue>{category ? categoryBySlug(category)?.name : categoryLabel}</SelectValue>
           </SelectTrigger>
           <SelectContent className="max-h-72">
             <SelectItem value={ALL_VALUE}>كل التصنيفات</SelectItem>
@@ -115,7 +115,13 @@ export function SearchBarWidget({
           disabled={!cities.length}
         >
           <SelectTrigger className="h-12" aria-label="المدينة أو المنطقة">
-            <SelectValue placeholder={cities.length ? "كل المدن" : "المدينة / المنطقة"} />
+            <SelectValue>
+              {city
+                ? cities.find((c) => c.slug === city)?.name
+                : cities.length
+                  ? "كل المدن"
+                  : "المدينة / المنطقة"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent className="max-h-72">
             <SelectItem value={ALL_VALUE}>كل المدن</SelectItem>

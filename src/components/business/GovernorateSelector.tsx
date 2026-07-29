@@ -26,7 +26,9 @@ export function GovernorateSelector({
       onValueChange={(v) => onChange(v === ALL_VALUE ? undefined : v)}
     >
       <SelectTrigger className={className} aria-label="اختر المحافظة">
-        <SelectValue placeholder={placeholder} />
+        <SelectValue>
+          {governorates.find((g) => g.slug === value)?.name ?? placeholder}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent className="max-h-72">
         <SelectItem value={ALL_VALUE}>{placeholder}</SelectItem>

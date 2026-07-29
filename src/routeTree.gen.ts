@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as RequestServiceRouteImport } from './routes/request-service'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProviderIdRouteImport } from './routes/provider.$id'
 
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RequestServiceRoute = RequestServiceRouteImport.update({
+  id: '/request-service',
+  path: '/request-service',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -31,30 +37,34 @@ const ProviderIdRoute = ProviderIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
   '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
   '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/request-service': typeof RequestServiceRoute
   '/services': typeof ServicesRoute
   '/provider/$id': typeof ProviderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/services' | '/provider/$id'
+  fullPaths: '/' | '/request-service' | '/services' | '/provider/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/services' | '/provider/$id'
-  id: '__root__' | '/' | '/services' | '/provider/$id'
+  to: '/' | '/request-service' | '/services' | '/provider/$id'
+  id: '__root__' | '/' | '/request-service' | '/services' | '/provider/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  RequestServiceRoute: typeof RequestServiceRoute
   ServicesRoute: typeof ServicesRoute
   ProviderIdRoute: typeof ProviderIdRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/request-service': {
+      id: '/request-service'
+      path: '/request-service'
+      fullPath: '/request-service'
+      preLoaderRoute: typeof RequestServiceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  RequestServiceRoute: RequestServiceRoute,
   ServicesRoute: ServicesRoute,
   ProviderIdRoute: ProviderIdRoute,
 }

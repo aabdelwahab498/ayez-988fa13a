@@ -153,6 +153,7 @@ export interface User {
 export type SortKey = "rating" | "relevance" | "response" | "price";
 
 export interface ProviderFilters {
+  sector?: SectorSlug;
   category?: string;
   governorate?: string;
   city?: string;

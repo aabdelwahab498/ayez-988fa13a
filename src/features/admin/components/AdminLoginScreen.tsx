@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { BrandLogo } from "@/components/common/BrandLogo";
-import { AppearanceControls } from "@/components/layout/AppearanceControls";
+import { LanguageToggle, ThemeToggle } from "@/components/layout/AppearanceControls";
 import { useI18n } from "@/features/i18n/I18nProvider";
 import { adminSession } from "@/features/admin/auth/adminSession";
 import { useAdminTeam } from "@/core/hooks/adminQueries";
@@ -72,7 +72,7 @@ export function AdminLoginScreen() {
       <section className="flex flex-col p-6 sm:p-10">
         <div className="flex items-center justify-between">
           <BrandLogo size="sm" />
-          <AppearanceControls />
+          <span className="flex items-center gap-1"><LanguageToggle /><ThemeToggle /></span>
         </div>
 
         <div className="mx-auto my-auto w-full max-w-sm py-10">

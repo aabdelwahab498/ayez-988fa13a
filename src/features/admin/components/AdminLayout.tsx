@@ -6,7 +6,7 @@ import { AdminSidebar } from "./AdminSidebar";
 import { AdminHeader } from "./AdminHeader";
 import { AdminLoginScreen } from "./AdminLoginScreen";
 import { useExecutiveSummary } from "@/core/hooks/adminQueries";
-import { PageSkeleton } from "@/components/common/Skeletons";
+import { StatsSkeleton } from "@/components/common/Skeletons";
 
 /**
  * Admin control-plane shell.
@@ -32,7 +32,7 @@ export function AdminLayout() {
   if (restoring) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-16">
-        <PageSkeleton />
+        <StatsSkeleton />
       </div>
     );
   }
@@ -59,7 +59,7 @@ function AdminShell({
       </aside>
 
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-        <SheetContent side="start" className="w-72 p-0">
+        <SheetContent side="right" className="w-72 p-0">
           <AdminSidebar onNavigate={() => setMenuOpen(false)} />
         </SheetContent>
       </Sheet>

@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AppearanceControls } from "@/components/layout/AppearanceControls";
+import { LanguageToggle, ThemeToggle } from "@/components/layout/AppearanceControls";
 import { useI18n } from "@/features/i18n/I18nProvider";
 import { useAdminSession } from "@/features/admin/auth/adminSession";
 import { useLocalized } from "@/features/admin/lib/format";
@@ -57,7 +57,7 @@ export function AdminHeader({ onOpenMenu, alertCount }: { onOpenMenu: () => void
         )}
       </Button>
 
-      <AppearanceControls />
+      <span className="flex items-center gap-1"><LanguageToggle /><ThemeToggle /></span>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

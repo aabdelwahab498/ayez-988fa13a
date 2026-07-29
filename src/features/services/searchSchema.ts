@@ -32,6 +32,8 @@ export const defaultSearch: ServicesSearch = {
   maxPrice: 0,
   sort: "relevance",
   q: "",
+  page: 1,
+  pageSize: 9,
 };
 
 export const validateServicesSearch = zodValidator(servicesSearchSchema);

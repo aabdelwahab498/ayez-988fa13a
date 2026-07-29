@@ -58,7 +58,7 @@ export function SearchBarWidget({
     <div
       className={
         variant === "hero"
-          ? "rounded-2xl bg-card p-4 shadow-elevated sm:p-5"
+          ? "rounded-2xl bg-card p-4 text-foreground shadow-elevated sm:p-5"
           : "card-surface p-4"
       }
     >

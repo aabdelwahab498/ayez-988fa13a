@@ -81,19 +81,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#1e2a4a" },
-      { title: "دليل الخدمات | أفضل الخدمات بالقرب منك في مصر" },
+      { title: "دليل الخدمات | أفضل الخدمات بالقرب منك في جميع محافظات مصر" },
       {
         name: "description",
         content:
-          "منصة مصرية تساعدك على العثور على مقدمي خدمات موثقين في جميع المحافظات وإرسال طلب خدمة في دقائق.",
+          "ابحث عن سباك أو كهربائي أو فني تكييف موثق في محافظتك، قارن التقييمات والأسعار وأرسل طلب الخدمة في دقائق.",
       },
-      { property: "og:title", content: "دليل الخدمات" },
+      { property: "og:title", content: "دليل الخدمات | أفضل الخدمات بالقرب منك في جميع محافظات مصر" },
       {
         property: "og:description",
-        content: "ابحث عن فنيين وشركات خدمات موثقة في جميع محافظات مصر.",
+        content: "ابحث عن سباك أو كهربائي أو فني تكييف موثق في محافظتك، قارن التقييمات والأسعار وأرسل طلب الخدمة في دقائق.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "دليل الخدمات | أفضل الخدمات بالقرب منك في جميع محافظات مصر" },
+      { name: "twitter:description", content: "ابحث عن سباك أو كهربائي أو فني تكييف موثق في محافظتك، قارن التقييمات والأسعار وأرسل طلب الخدمة في دقائق." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e90df0ca-4305-4c10-8abd-09ab8eb65a67/id-preview-a4684118--7d9b240d-11cb-4030-8e3a-2fcf86164b57.lovable.app-1785366415432.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e90df0ca-4305-4c10-8abd-09ab8eb65a67/id-preview-a4684118--7d9b240d-11cb-4030-8e3a-2fcf86164b57.lovable.app-1785366415432.png" },
     ],
     links: [
       {

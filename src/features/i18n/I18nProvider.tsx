@@ -28,6 +28,7 @@ interface I18nContextValue {
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null);
+console.log("DBG i18n module eval", Math.random());
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>("ar");
@@ -75,6 +76,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     };
   }, [lang, setLang]);
 
+  console.log("DBG provider render");
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

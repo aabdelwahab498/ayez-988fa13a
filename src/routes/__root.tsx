@@ -12,6 +12,12 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  installStaleChunkRecovery,
+  isStaleChunkError,
+  recoverFromStaleChunk,
+} from "../lib/stale-chunk-recovery";
+
 import { ThemeProvider } from "@/features/theme/ThemeProvider";
 import { I18nProvider, useI18n } from "@/features/i18n/I18nProvider";
 
@@ -37,30 +43,15 @@ function NotFoundComponent() {
   );
 }
 
-/** A new deploy invalidates old hashed chunk URLs still cached in an open tab. */
-function isStaleChunkError(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error);
-  return /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(
-    message,
-  );
-}
-
-const STALE_CHUNK_RELOAD_KEY = "ayez-stale-chunk-reloaded";
-
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    // Recover automatically from stale chunks (once, to avoid reload loops).
-    if (isStaleChunkError(error) && typeof window !== "undefined") {
-      if (!sessionStorage.getItem(STALE_CHUNK_RELOAD_KEY)) {
-        sessionStorage.setItem(STALE_CHUNK_RELOAD_KEY, "1");
-        window.location.reload();
-        return;
-      }
-    }
+    // Recover automatically from stale chunks after a new deploy.
+    if (isStaleChunkError(error) && recoverFromStaleChunk()) return;
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
+
 
 
   return (
@@ -163,6 +154,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    installStaleChunkRecovery();
+  }, []);
+
+
 
   return (
     <QueryClientProvider client={queryClient}>

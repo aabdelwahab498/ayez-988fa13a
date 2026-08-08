@@ -9,7 +9,7 @@ import {
   Send,
   Briefcase,
 } from "lucide-react";
-import heroImage from "@/assets/hero-directory-team.jpg";
+import heroAsset from "@/assets/hero-directory-team.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { SearchBarWidget } from "@/components/business/SearchBarWidget";
@@ -89,7 +89,7 @@ export function HomePage() {
 
           <div className="relative">
             <img
-              src={heroImage}
+              src={heroAsset.url}
               alt={t("home.heroAlt")}
               width={1200}
               height={912}

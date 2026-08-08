@@ -12,6 +12,12 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  installStaleChunkRecovery,
+  isStaleChunkError,
+  recoverFromStaleChunk,
+} from "../lib/stale-chunk-recovery";
+
 import { ThemeProvider } from "@/features/theme/ThemeProvider";
 import { I18nProvider, useI18n } from "@/features/i18n/I18nProvider";
 

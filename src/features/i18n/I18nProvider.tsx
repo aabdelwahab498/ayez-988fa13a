@@ -1,3 +1,4 @@
+import type React from "react";
 import {
   createContext,
   useCallback,
@@ -27,7 +28,15 @@ interface I18nContextValue {
   locale: string;
 }
 
-const I18nContext = createContext<I18nContextValue | null>(null);
+// The module can be evaluated more than once across SSR/client module graphs.
+// Keeping one React context on globalThis guarantees provider and consumers
+// always share the same context instance.
+const globalScope = globalThis as typeof globalThis & {
+  __ayezI18nContext?: React.Context<I18nContextValue | null>;
+};
+const I18nContext: React.Context<I18nContextValue | null> =
+  globalScope.__ayezI18nContext ??
+  (globalScope.__ayezI18nContext = createContext<I18nContextValue | null>(null));
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>("ar");
